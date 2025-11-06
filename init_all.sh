@@ -2,23 +2,23 @@
 # ---------------------------------------------------------------------------
 # init_all.sh  —  Silent modular environment loader
 #
-# Loads your environment and scripts from ~/projects/scripts in this order:
-#   1. Environment files (env/*.sh)     → PATH, LANG, aliases, prompt, etc.
-#   2. Other modules (git/, sys/, net/) → functions, utilities, tools
+# Loads custom environment scripts from ~/projects/scripts in a clean order:
+#   1. Environment and alias files (env/*.sh)
+#   2. All other module directories (git/, sys/, net/, etc.)
 #
-# Hidden directories (.cache, .git, .vscode, etc.) are ignored.
+# Automatically ignores hidden folders like .cache, .git, .vscode, tmp, etc.
 #
-# Add this to your ~/.bashrc:
+# Add to your ~/.bashrc:
 #     source "$HOME/projects/scripts/init_all.sh"
 #
-# Reload anytime with:
+# Optional reload alias:
 #     reloadEnv
 # ---------------------------------------------------------------------------
 
-# --- Guard: prevent direct execution ---------------------------------------
+# --- Guard: prevent accidental direct execution ----------------------------
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
-    echo "⚠️  This file must be sourced, not executed."
-    echo "   Add this line to your ~/.bashrc:"
+    echo "⚠️  This file should be sourced, not executed."
+    echo "   Add this line to your ~/.bashrc instead:"
     echo "     source \$HOME/projects/scripts/init_all.sh"
     exit 1
 fi
@@ -26,7 +26,9 @@ fi
 SCRIPT_ROOT="$HOME/projects/scripts"
 [[ -d "$SCRIPT_ROOT" ]] || return 0 2>/dev/null || exit 0
 
-# --- Helper: safe source ----------------------------------------------------
+[[ -n "${INIT_VERBOSE:-}" ]] && echo "[init] Loading from $SCRIPT_ROOT..."
+
+# --- Helper: safe source with silent error capture -------------------------
 safe_source() {
     local file="$1"
     [[ -f "$file" && -r "$file" ]] || return 0
@@ -48,7 +50,7 @@ for dir in "$SCRIPT_ROOT"/*/; do
     local dname
     dname="$(basename "$dir")"
 
-    # Skip environment & hidden/system folders
+    # Skip special or hidden directories
     case "$dname" in
         env|.git|.cache|.vscode|tmp|temp|__pycache__) continue ;;
     esac
@@ -59,5 +61,5 @@ for dir in "$SCRIPT_ROOT"/*/; do
     done
 done
 
-# --- 3️⃣ Define reload alias ------------------------------------------------
+# --- 3️⃣ Define a quick reload alias ---------------------------------------
 alias reloadEnv="source $HOME/projects/scripts/init_all.sh >/dev/null 2>&1 && echo '🔁 Environment reloaded.'"
