@@ -4,10 +4,14 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 
 ## 📦 Current Structure
 ```
-~/projects/WORKSPACE/scripts
+~/projects/scripts
+├── backup
+│   └── nightly_backup.sh
 ├── git
 │   ├── git_branch_search_completion.sh
-│   └── git_branch_search.sh
+│   ├── git_branch_search.sh
+│   ├── git_search_file_branches.sh
+│   └── git_search_file_remote_branches.sh
 ├── init_all.sh
 ├── net
 │   └── ping_tools.sh
