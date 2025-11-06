@@ -7,6 +7,15 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 ~/projects/scripts
 ├── backup
 │   └── nightly_backup.sh
+├── create_script_file.sh
+├── env
+│   ├── 01_core_env.sh
+│   ├── 10_cuda_env.sh
+│   ├── 20_devtools_env.sh
+│   ├── aliases_env.sh
+│   ├── cuda_env.sh
+│   ├── prompt_env.sh
+│   └── README.md
 ├── git
 │   ├── git_branch_search_completion.sh
 │   ├── git_branch_search.sh
@@ -19,7 +28,12 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 ├── setup_bash_env.sh
 └── sys
     ├── backup_nightly.sh
-    └── cleanup_temp.sh
+    ├── cleanup_temp.sh
+    ├── create_tagged_archive.sh
+    ├── manage_locate_paths.log
+    ├── manage_locate_paths.sh
+    ├── verify_archive_file.sh
+    └── verify_env.sh
 ```
 
 ## ⚙️ Auto-Loader
