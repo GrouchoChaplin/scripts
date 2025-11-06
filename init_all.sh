@@ -9,3 +9,6 @@
 }
 
 # TODO: Implement Autoload all .sh files from subfolders logic here.
+
+alias gfindfile='~/projects/scripts/git/git_search_file_remote_branches.sh'
+alias gfindrfile='~/projects/scripts/git/git_search_file_remote_branches.sh'
