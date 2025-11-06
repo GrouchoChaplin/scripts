@@ -4,10 +4,11 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 
 ## 📦 Current Structure
 ```
-~/projects/scripts
+~/projects/scripts/
 ├── backup
 │   └── nightly_backup.sh
 ├── create_script_file.sh
+├── create_scripts_tree.sh
 ├── env
 │   ├── 01_core_env.sh
 │   ├── 10_cuda_env.sh
@@ -30,6 +31,7 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
     ├── backup_nightly.sh
     ├── cleanup_temp.sh
     ├── create_tagged_archive.sh
+    ├── extract_archive.sh
     ├── manage_locate_paths.log
     ├── manage_locate_paths.sh
     ├── verify_archive_file.sh
