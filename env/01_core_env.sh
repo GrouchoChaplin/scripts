@@ -73,3 +73,5 @@ fi
 # --- Confirmation -----------------------------------------------------------
 # Uncomment for debug info during startup
 # echo "[env] Core environment loaded (01_core_env.sh)"
+
+alias cls='printf "\33[2J"';
