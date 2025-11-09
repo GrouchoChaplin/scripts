@@ -10,14 +10,31 @@
 
 set -e
 set -o pipefail
+#!/usr/bin/env bash
+# ---------------------------------------------------------------------------
+# sort_files_by_mtime.sh
+# Reads file paths from foundfiles.txt, sorts them by modification time,
+# logs results to a timestamped file, warns about missing files,
+# and optionally includes file sizes in human-readable format.
+# ---------------------------------------------------------------------------
 
 INPUT_FILE="foundfiles.txt"
 LOG_FILE="sorted_files_$(date '+%Y-%m-%d_%H-%M-%S').log"
-MISSING_COUNT=0
 TEMP_FILE=$(mktemp)
+INCLUDE_SIZE=false
+MISSING_COUNT=0
+
+# --- Parse optional flags ---
+for arg in "$@"; do
+  case "$arg" in
+    --size|-s) INCLUDE_SIZE=true ;;
+    *) echo "⚠️  Unknown option: $arg" ;;
+  esac
+done
 
 echo "📂 Reading from: $INPUT_FILE"
 echo "🕒 Writing results to: $LOG_FILE"
+$INCLUDE_SIZE && echo "📏 Including file sizes"
 echo
 
 {
@@ -25,17 +42,30 @@ echo
   echo "Generated on $(date)"
   echo "----------------------------------------------"
 
-  # Collect timestamps safely
+  # Collect file metadata
   while IFS= read -r file; do
     [[ -z "$file" ]] && continue  # skip blank lines
-
     if [[ -f "$file" ]]; then
-      # Try stat normally; if permission denied, retry with sudo
-      if ! stat --format='%Y %n' "$file" >> "$TEMP_FILE" 2>/dev/null; then
-        sudo -n stat --format='%Y %n' "$file" >> "$TEMP_FILE" 2>/dev/null || {
+      if $INCLUDE_SIZE; then
+        # Try stat normally
+        if stat --format='%Y %s %n' "$file" >> "$TEMP_FILE" 2>/dev/null; then
+          :
+        # Retry with sudo quietly
+        elif sudo -n stat --format='%Y %s %n' "$file" >> "$TEMP_FILE" 2>/dev/null; then
+          :
+        else
           echo "MISSING: $file"
           ((MISSING_COUNT++))
-        }
+        fi
+      else
+        if stat --format='%Y %n' "$file" >> "$TEMP_FILE" 2>/dev/null; then
+          :
+        elif sudo -n stat --format='%Y %n' "$file" >> "$TEMP_FILE" 2>/dev/null; then
+          :
+        else
+          echo "MISSING: $file"
+          ((MISSING_COUNT++))
+        fi
       fi
     else
       echo "MISSING: $file"
@@ -43,12 +73,27 @@ echo
     fi
   done < "$INPUT_FILE"
 
-  # Sort and pretty-print
-  sort -n "$TEMP_FILE" 2>/dev/null | awk '
-    /^[0-9]+/ {
-      $1 = strftime("%Y-%m-%d %H:%M:%S", $1);
-      print;
-    }'
+  # Format and sort results
+  if $INCLUDE_SIZE; then
+    sort -n "$TEMP_FILE" | awk '
+      function human(x) {
+        if (x<1024) return x " B";
+        if (x<1048576) return sprintf("%.1f KB", x/1024);
+        if (x<1073741824) return sprintf("%.1f MB", x/1048576);
+        return sprintf("%.2f GB", x/1073741824);
+      }
+      /^[0-9]+/ {
+        t=$1; size=$2; $1=$2="";
+        printf "%s  %-8s  %s\n", strftime("%Y-%m-%d %H:%M:%S", t), human(size), substr($0,3);
+      }'
+  else
+    sort -n "$TEMP_FILE" | awk '
+      /^[0-9]+/ {
+        $1=strftime("%Y-%m-%d %H:%M:%S",$1);
+        print;
+      }'
+  fi
+
   rm -f "$TEMP_FILE"
 
   echo "----------------------------------------------"

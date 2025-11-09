@@ -34,6 +34,13 @@ build_exclude_filter() {
     grep -v -F "${patterns[@]}"
 }
 
+# Generate timestamp for log file
+LOG_TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
+LOG_FILE="find_shaders_sha256.${LOG_TIMESTAMP}.log"
+
+# Redirect all output to log file AND print to stdout
+exec > >(tee "$LOG_FILE") 2>&1
+
 # Print left-justified header
 printf "%-19s %-6s %-8s %-8s %-64s %-s\n" "TIMESTAMP" "LINES" "SIZE_KB" "SIZE_MB" "SHA256" "FILEPATH"
 

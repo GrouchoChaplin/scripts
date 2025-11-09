@@ -39,7 +39,7 @@ export VISUAL="vim"
 # --- Less & grep colorization ----------------------------------------------
 export LESS="-R -M -N"
 export LESSHISTFILE=-
-export GREP_OPTIONS="--color=auto"
+#export GREP_OPTIONS="--color=auto"
 export GREP_COLORS='mt=1;31'
 
 # --- LS colors --------------------------------------------------------------
