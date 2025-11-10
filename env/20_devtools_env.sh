@@ -82,3 +82,6 @@ alias gss='git status -s'
 
 # --- Optional message (disabled by default) --------------------------------
 # echo "[env] Development tools environment loaded."
+
+export PATH="$HOME/projects/3rdParty/flutter/bin:$PATH"
+
