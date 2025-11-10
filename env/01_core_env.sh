@@ -75,3 +75,5 @@ fi
 # echo "[env] Core environment loaded (01_core_env.sh)"
 
 alias cls='printf "\33[2J"';
+alias h='history'
+alias updateNOW='export NOW=$(date "+%Y_%m_%d_T%H_%M_%S") && echo $NOW'
