@@ -17,6 +17,8 @@
 # Generates both text and HTML reports.
 # ---------------------------------------------------------------------------
 
+source "$SCRIPT_PREAMBLE"
+
 set -euo pipefail
 export LC_ALL=C
 
