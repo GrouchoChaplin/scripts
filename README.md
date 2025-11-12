@@ -29,13 +29,6 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 │   ├── git_search_file_branches.sh
 │   └── git_search_file_remote_branches.sh
 ├── init_all.sh
-├── ll
-│   ├── git
-│   ├── init_all.sh
-│   ├── net
-│   ├── README.md
-│   ├── setup_bash_env.sh
-│   └── sys
 ├── net
 │   └── ping_tools.sh
 ├── README.md
@@ -59,7 +52,6 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 │   ├── update_anaconda.sh
 │   ├── verify_archive_file.sh
 │   └── verify_env.sh
-├── temp
 └── test
     └── test_script_preable.sh
 ```
