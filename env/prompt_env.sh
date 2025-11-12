@@ -22,7 +22,7 @@ git_branch() {
         symbol="+"
       fi
     else
-      color="\033[0;31m"     # 🔴 Unstaged changes
+      color="\033[1;31m"     # 🔴 Unstaged changes
       symbol="*"
     fi
   fi
