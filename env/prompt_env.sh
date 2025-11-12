@@ -1,4 +1,11 @@
-# --- Git branch helper with live color + symbols + detached HEAD support ---
+#!/usr/bin/env bash
+# ------------------------------------------------------------------
+# dynamic_git_prompt.sh
+# Shows a colorized git-aware Bash prompt.
+# If $SHOW_FULL_PATH is set, uses full path; otherwise, shows only folder name.
+# ------------------------------------------------------------------
+
+# --- Git branch helper with color + symbols + detached HEAD support ---
 git_branch() {
   local ref branch color symbol
 
@@ -13,23 +20,35 @@ git_branch() {
 
   # Determine color and symbol
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    if git diff --quiet 2>/dev/null; then
-      if git diff --cached --quiet 2>/dev/null && [ -z "$(git ls-files --others --exclude-standard)" ]; then
-        color="\033[0;32m"   # 🟢 Clean
-        symbol="✔"
-      else
-        color="\033[0;33m"   # 🟡 Staged or untracked
-        symbol="+"
-      fi
-    else
-      color="\033[1;31m"     # 🔴 Unstaged changes
+    if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+      color="\033[0;33m"  # 🟡 Untracked
+      symbol="+"
+    elif ! git diff --quiet 2>/dev/null; then
+      color="\033[1;31m"  # 🔴 Unstaged
       symbol="*"
+    elif ! git diff --cached --quiet 2>/dev/null; then
+      color="\033[0;33m"  # 🟡 Staged
+      symbol="+"
+    else
+      color="\033[0;32m"  # 🟢 Clean
+      symbol="✔"
     fi
   fi
 
-  # Print directly with ANSI color codes (no prompt escapes)
   echo -e " (${color}${branch}${symbol}\033[0m)"
 }
 
-# --- PS1 prompt: user@host cwd (branch status) ---
-export PS1="\[\e[36m\]\u@\h\[\e[0m\] \[\e[34m\]\W\[\e[0m\]\$(git_branch)\[\e[32m\]\$\[\e[0m\] "
+# --- Determine whether to show full path or just folder ---
+if [[ -n "${SHOW_FULL_PATH:-}" ]]; then
+  # Show full path (\w)
+  PATH_FORMAT="\[\033[38;5;27m\][\w]\[\033[0m\]"
+else
+  # Show only folder (\W)
+  PATH_FORMAT="\[\033[38;5;27m\][\W]\[\033[0m\]"
+fi
+
+# --- Final PS1 construction ---
+# user@host = color 11 (yellow)
+# folder = color 27 (cyan-blue)
+# $ = color 10 (green)
+export PS1="\[\033[38;5;11m\]\u@\h\[\033[0m\] ${PATH_FORMAT}\$(git_branch)\[\033[38;5;10m\]\$\[\033[0m\] "
