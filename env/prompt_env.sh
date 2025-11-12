@@ -1,8 +1,8 @@
-# --- Git branch helper with color status and detached HEAD support ---
+# --- Git branch helper with live color + symbols + detached HEAD support ---
 git_branch() {
-  local ref branch color
+  local ref branch color symbol
 
-  # Get branch or commit (detached)
+  # Get branch name or detached commit hash
   ref=$(git symbolic-ref --short -q HEAD 2>/dev/null)
   if [ -n "$ref" ]; then
     branch="$ref"
@@ -11,23 +11,25 @@ git_branch() {
     branch="detached@$branch"
   fi
 
-  # Determine color
+  # Determine color and symbol
   if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     if git diff --quiet 2>/dev/null; then
       if git diff --cached --quiet 2>/dev/null && [ -z "$(git ls-files --others --exclude-standard)" ]; then
-        color="\e[32m"   # green = clean
+        color="\033[0;32m"   # 🟢 Clean
+        symbol="✔"
       else
-        color="\e[33m"   # yellow = staged/untracked
+        color="\033[0;33m"   # 🟡 Staged or untracked
+        symbol="+"
       fi
     else
-      color="\e[31m"     # red = unstaged
+      color="\033[0;31m"     # 🔴 Unstaged changes
+      symbol="*"
     fi
   fi
 
-  # ✅ Use double quotes and properly escaped sequences
-  echo " (\[${color}\]${branch}\[\e[0m\])"
+  # Print directly with ANSI color codes (no prompt escapes)
+  echo -e " (${color}${branch}${symbol}\033[0m)"
 }
 
-
-# --- PS1: user@host cwd (branch) ---
+# --- PS1 prompt: user@host cwd (branch status) ---
 export PS1="\[\e[36m\]\u@\h\[\e[0m\] \[\e[34m\]\W\[\e[0m\]\$(git_branch)\[\e[32m\]\$\[\e[0m\] "
