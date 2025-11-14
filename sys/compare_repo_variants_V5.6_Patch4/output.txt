@@ -1,0 +1,4 @@
+🔍 Running FORENSIC mode…
+🔍 Searching: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/
+🔍 Looking for repos matching prefix: jsigconversiontools*
+🔍 Running forensic scan across repo variants…

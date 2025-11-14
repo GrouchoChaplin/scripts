@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# compare_repo_variants_V5.6_Patch6.sh
+# compare_repo_variants_V5.6_Patch7.sh
 #
 # Deep forensic comparison of multiple backups/copies of the same Git repo.
 #
@@ -15,13 +15,8 @@
 #       * "likely last active repo" based on latest activity
 #   - Deep search (any depth) under the given root folder
 #   - Optional --debug-find to show every candidate as found
-#
-# Example:
-#   ./compare_repo_variants_V5.6_Patch6.sh \
-#      --root-folder /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10 \
-#      --repo-name jsigconversiontools \
-#      --mode forensic \
-#      --debug-find
+#   - Optional --debug-scan to show per-repo forensic scan internals
+#   - Optional --debug-temp to keep temp files instead of deleting them
 #
 set -euo pipefail
 
@@ -64,6 +59,19 @@ now_ts() {
 }
 
 ########################################
+# Debug helpers
+########################################
+DEBUG_FIND=0
+DEBUG_TEMP=0
+DEBUG_SCAN=0
+
+debug_scan() {
+    if [[ "$DEBUG_SCAN" -eq 1 ]]; then
+        echo "[debug-scan] $*" >&2
+    fi
+}
+
+########################################
 # Git helpers
 ########################################
 git_ahead() {
@@ -92,8 +100,6 @@ git_behind() {
 #   Require: .git directory inside
 #   Optional debug output: --debug-find
 ########################################
-DEBUG_FIND=0
-
 find_repos() {
     local root="$1"
     local prefix="$2"
@@ -107,8 +113,6 @@ find_repos() {
     fi
 
     # Deep search: any depth, names that contain prefix
-    # Example prefix: jsigconversiontools
-    # Matches: jsigconversiontools, jsigconversiontools.oops, TEMP/jsigconversiontools, etc.
     while IFS= read -r -d '' d; do
         if [[ -d "$d/.git" ]]; then
             (( DEBUG_FIND )) && echo "   [debug-find] candidate repo: $d"
@@ -187,7 +191,7 @@ latest_file_change() {
 scan_repo_standard() {
     local repo="$1"
 
-    [[ ! -e "$repo/.git" ]] && return 1
+    [[ ! -e "$repo/.git" ]] && return 0
 
     local branch commit_epoch commit_human dirty ahead behind
 
@@ -212,7 +216,12 @@ scan_repo_standard() {
 scan_repo_forensic() {
     local repo="$1"
 
-    [[ ! -e "$repo/.git" ]] && return 1
+    debug_scan "scan_repo_forensic: START repo=$repo"
+
+    if [[ ! -e "$repo/.git" ]]; then
+        debug_scan "  repo has no .git, skipping"
+        return 0
+    fi
 
     local branch last_epoch last_human dirty ahead behind
     local staged unstaged untracked
@@ -220,20 +229,28 @@ scan_repo_forensic() {
     local activity_epoch
 
     branch=$(git -C "$repo" rev-parse --abbrev-ref HEAD 2>/dev/null || echo "HEAD")
+    debug_scan "  branch=$branch"
+
     last_epoch=$(git -C "$repo" log -1 --format='%ct' 2>/dev/null || echo 0)
     last_human=$(fmt_ts "$last_epoch")
+    debug_scan "  last_epoch=$last_epoch last_human='$last_human'"
 
     dirty="clean"
     if [[ -n "$(git -C "$repo" status --porcelain 2>/dev/null)" ]]; then
         dirty="dirty"
     fi
+    debug_scan "  dirty=$dirty"
 
     ahead=$(git_ahead "$repo")
     behind=$(git_behind "$repo")
+    debug_scan "  ahead=$ahead behind=$behind"
 
     read -r staged unstaged untracked < <(count_status_classes "$repo")
+    debug_scan "  staged=$staged unstaged=$unstaged untracked=$untracked"
+
     IFS=$'\t' read -r latest_epoch latest_path <<< "$(latest_file_change "$repo")"
     latest_human=$(fmt_ts "$latest_epoch")
+    debug_scan "  latest_epoch=$latest_epoch latest_path='$latest_path' latest_human='$latest_human'"
 
     # "Activity epoch" = max(last commit, latest file touch)
     if [[ "$latest_epoch" -gt "$last_epoch" ]]; then
@@ -241,8 +258,11 @@ scan_repo_forensic() {
     else
         activity_epoch="$last_epoch"
     fi
+    debug_scan "  activity_epoch=$activity_epoch"
 
     echo -e "${activity_epoch}\t${repo}\t${branch}\t${last_epoch}\t${last_human}\t${dirty}\t${ahead}\t${behind}\t${staged}\t${unstaged}\t${untracked}\t${latest_epoch}\t${latest_human}\t${latest_path}"
+
+    debug_scan "scan_repo_forensic: END repo=$repo"
 }
 
 ########################################
@@ -291,7 +311,7 @@ run_mode_standard() {
     info "Found $(wc -l < "$repo_list") repo(s). Collecting metadata…"
 
     while IFS= read -r repo; do
-        scan_repo_standard "$repo" >> "$scan_file"
+        scan_repo_standard "$repo" >> "$scan_file" || warn "scan_repo_standard failed for $repo"
     done < "$repo_list"
 
     sort -nr -k1,1 "$scan_file" > "$sorted"
@@ -319,7 +339,6 @@ run_mode_standard() {
     else
         rm -f "$repo_list" "$scan_file" "$sorted"
     fi
-
 }
 
 run_mode_forensic() {
@@ -347,9 +366,32 @@ run_mode_forensic() {
 
     info "Found $(wc -l < "$repo_list") repo(s). Collecting forensic data…"
 
+    if [[ "$DEBUG_SCAN" -eq 1 || "$DEBUG_TEMP" -eq 1 ]]; then
+        echo "[debug-scan] repo_list file: $repo_list"
+        cat "$repo_list"
+        echo
+    fi
+
     while IFS= read -r repo; do
-        scan_repo_forensic "$repo" >> "$scan_file"
+        debug_scan "Invoking scan_repo_forensic on: $repo"
+        scan_repo_forensic "$repo" >> "$scan_file" || warn "scan_repo_forensic failed for $repo"
     done < "$repo_list"
+
+    if [[ ! -s "$scan_file" ]]; then
+        error "Forensic scan produced no records (scan_file is empty)."
+        if [[ "$DEBUG_TEMP" -eq 1 || "$DEBUG_SCAN" -eq 1 ]]; then
+            echo "[debug-scan] scan_file = $scan_file (empty)"
+        else
+            rm -f "$repo_list" "$scan_file" "$sorted"
+        fi
+        return 1
+    fi
+
+    if [[ "$DEBUG_SCAN" -eq 1 ]]; then
+        echo "[debug-scan] Raw forensic scan output (scan_file=$scan_file):"
+        cat "$scan_file"
+        echo
+    fi
 
     # Sort by activity_epoch descending (field 1)
     sort -nr -k1,1 "$scan_file" > "$sorted"
@@ -397,7 +439,6 @@ run_mode_forensic() {
     else
         rm -f "$repo_list" "$scan_file" "$sorted"
     fi
-
 }
 
 ########################################
@@ -407,19 +448,20 @@ run_mode_forensic() {
 ROOT_FOLDER=""
 REPO_NAME=""
 MODE="standard"
-DEBUG_FIND=0
-DEBUG_TEMP=0 
 
 usage() {
     cat <<EOF
 Usage:
-  $0 --root-folder <path> --repo-name <name> [--mode standard|forensic] [--debug-find]
+  $0 --root-folder <path> --repo-name <name> [--mode standard|forensic]
+       [--debug-find] [--debug-temp] [--debug-scan]
 
 Options:
   --root-folder PATH    Root of backup tree to search
   --repo-name NAME      Repo name substring (e.g. jsigconversiontools)
   --mode MODE           'standard' (default) or 'forensic'
   --debug-find          Print each candidate directory found during search
+  --debug-temp          Keep temp files (repo_list, scan_file, sorted) after run
+  --debug-scan          Verbose output from forensic scanning
   -h, --help            Show this help
 
 Examples:
@@ -431,7 +473,7 @@ Examples:
   Forensic:
     $0 --root-folder /run/media/.../2025-10-10 \\
        --repo-name jsigconversiontools \\
-       --mode forensic --debug-find
+       --mode forensic --debug-find --debug-scan --debug-temp
 EOF
 }
 
@@ -452,6 +494,8 @@ while [[ $# -gt 0 ]]; do
             DEBUG_FIND=1; shift ;;
         --debug-temp)
             DEBUG_TEMP=1; shift ;;
+        --debug-scan)
+            DEBUG_SCAN=1; shift ;;
         -h|--help)
             usage; exit 0 ;;
         *)
@@ -490,3 +534,5 @@ case "$MODE" in
     standard) run_mode_standard "$ROOT_FOLDER" "$REPO_NAME" ;;
     forensic) run_mode_forensic "$ROOT_FOLDER" "$REPO_NAME" ;;
 esac
+
+

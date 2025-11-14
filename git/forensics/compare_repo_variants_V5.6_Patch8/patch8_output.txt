@@ -1,0 +1,44 @@
+🔍 Running FORENSIC mode…
+🔍 Searching: /run/media/peddycoartte/MasterBackup/Nightly
+🔍 Looking for repos with names containing: jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools.oops
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools.oops_2
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/TEMP/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools.oops
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools.oops_2
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/TEMP/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools.oops
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools.oops_2
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/TEMP/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops_2
+   [debug-find] candidate repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/TEMP/jsigconversiontools
+🔍 Found 16 repo(s). Collecting forensic data…
+
+REPO PATH                                                              | BRANCH               | LAST COMMIT         | LAST FILE           | DIRTY  | STAGE  | UNSTG  | UNTRK  | ACT.EPOCH 
+————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————————
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-09-19 09:45:58 | 2025-09-19 10:06:06 | [0;32mclean[0m | 0      | 0      | 0      | 1758294366
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-09-19 09:45:58 | 2025-09-19 10:06:06 | [0;32mclean[0m | 0      | 0      | 0      | 1758294366
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-09-19 09:45:58 | 2025-09-19 10:06:06 | [0;32mclean[0m | 0      | 0      | 0      | 1758294366
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-09-19 09:45:58 | 2025-09-19 10:06:06 | [0;32mclean[0m | 0      | 0      | 0      | 1758294366
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops_2 | HEAD                 | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758215361 | 2025-09-18 12:09:21 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops_2/pubspec.yaml | 1758215361
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools.oops_2 | HEAD                 | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758215361 | 2025-09-18 12:09:21 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools.oops_2/pubspec.yaml | 1758215361
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools.oops_2 | HEAD                 | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758215361 | 2025-09-18 12:09:21 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools.oops_2/pubspec.yaml | 1758215361
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools.oops_2 | HEAD                 | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758215361 | 2025-09-18 12:09:21 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools.oops_2/pubspec.yaml | 1758215361
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758214959 | 2025-09-18 12:02:39 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops/lib/screens/model/model_screen.dart | 1758214959
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools.oops | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758214959 | 2025-09-18 12:02:39 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/jsigconversiontools.oops/lib/screens/model/model_screen.dart | 1758214959
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools.oops | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758214959 | 2025-09-18 12:02:39 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/jsigconversiontools.oops/lib/screens/model/model_screen.dart | 1758214959
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools.oops | 3-merge-ir-imagery-tool-gui-functionaly-into-jsigconversions-gui | 2025-08-14 16:40:51 |                     | [0;31mdirty[0m | 1758214959 | 2025-09-18 12:02:39 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/jsigconversiontools.oops/lib/screens/model/model_screen.dart | 1758214959
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/TEMP/jsigconversiontools | implement-modis      | 2025-09-18 11:46:44 |                     | [0;31mdirty[0m | 1758213521 | 2025-09-18 11:38:41 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/TEMP/jsigconversiontools/linux/flutter/ephemeral/generated_config.cmake | 1758214004
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/TEMP/jsigconversiontools | implement-modis      | 2025-09-18 11:46:44 |                     | [0;31mdirty[0m | 1758213521 | 2025-09-18 11:38:41 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-09/projects/jctcs/TEMP/jsigconversiontools/linux/flutter/ephemeral/generated_config.cmake | 1758214004
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/TEMP/jsigconversiontools | implement-modis      | 2025-09-18 11:46:44 |                     | [0;31mdirty[0m | 1758213521 | 2025-09-18 11:38:41 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-08/projects/jctcs/TEMP/jsigconversiontools/linux/flutter/ephemeral/generated_config.cmake | 1758214004
+/run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/TEMP/jsigconversiontools | implement-modis      | 2025-09-18 11:46:44 |                     | [0;31mdirty[0m | 1758213521 | 2025-09-18 11:38:41 | /run/media/peddycoartte/MasterBackup/Nightly/2025-10-07/projects/jctcs/TEMP/jsigconversiontools/linux/flutter/ephemeral/generated_config.cmake | 1758214004
+
+✅ Likely LAST ACTIVE repo (by activity):
+   Path : /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools
+   Epoch: 1758294366
+   Time : 2025-09-19 10:06:06
