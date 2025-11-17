@@ -78,7 +78,7 @@ alias gccver='${CC:-gcc} --version | head -n1'
 alias clangver='clang --version | head -n1 2>/dev/null || echo "clang not installed"'
 alias cmver='cmake --version | head -n1 2>/dev/null || echo "cmake not installed"'
 alias devinfo='echo -e "Compiler: ${CC:-unknown}\nC++: ${CXX:-unknown}\nCMake: ${CMAKE_BIN:-not found}\nConan: $(command -v conan || echo none)\nVcpkg: ${VCPKG_ROOT:-none}\nPython: ${PYTHON_BIN:-none}\nCUDA: ${CUDA_HOME:-none}"'
-alias gss='git status -s'
+#alias gss='git status -s'
 
 # --- Optional message (disabled by default) --------------------------------
 # echo "[env] Development tools environment loaded."
