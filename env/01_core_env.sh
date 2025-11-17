@@ -79,3 +79,14 @@ alias h='history'
 alias updateNOW='export NOW=$(date "+%Y_%m_%d_T%H_%M_%S") && echo $NOW'
 
 export SCRIPT_PREAMBLE="$HOME/projects/scripts/sys/script_preamble.sh"
+export SCRIPTS_HOME=/home/peddycoartte/projects/scripts
+export PATH="${SCRIPTS_HOME}/backup":$PATH
+export PATH="${SCRIPTS_HOME}/conda":$PATH
+export PATH="${SCRIPTS_HOME}/env":$PATH
+export PATH="${SCRIPTS_HOME}/git":$PATH
+export PATH="${SCRIPTS_HOME}/net":$PATH
+export PATH="${SCRIPTS_HOME}/search":$PATH
+export PATH="${SCRIPTS_HOME}/sys":$PATH
+export PATH="${SCRIPTS_HOME}/sys/ownership_tools":$PATH
+export PATH="${SCRIPTS_HOME}/test":$PATH
+
