@@ -6,7 +6,7 @@
 #   create_script_file.sh [options] <script_name>
 #
 # Options:
-#   --dir <path>     Destination folder (default: ~/projects/scripts)
+#   --dir <path>     Destination folder (default: ~/projects/peddycoartte/scripts)
 #   --desc <string>  Description text for the header
 #   --no-edit        Do not open file in editor after creation
 #
@@ -58,7 +58,7 @@ detect_theme
 set_colors
 
 # --- Defaults ---
-DEFAULT_DIR="$HOME/projects/scripts"
+DEFAULT_DIR="$HOME/projects/peddycoartte/scripts"
 OPEN_IN_EDITOR=true
 DESCRIPTION=""
 

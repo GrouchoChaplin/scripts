@@ -8,7 +8,7 @@
 # Version: 1.0.0
 # Build:   2025-11-18
 # Git:     $(git rev-parse --short HEAD 2>/dev/null || echo "no-git")
-# Path:    ~/projects/scripts/sys/update_tree_readme.sh
+# Path:    ~/projects/peddycoartte/scripts/sys/update_tree_readme.sh
 
 set -euo pipefail
 

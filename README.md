@@ -4,7 +4,7 @@ Personal Bash & system utilities that autoload automatically via `init_all.sh`.
 
 ## 📦 Current Structure
 ```
-~/projects/scripts
+~/projects/peddycoartte/scripts
 ├── backup
 │   └── nightly_backup.sh
 ├── conda
@@ -62,8 +62,8 @@ The [`init_all.sh`](./init_all.sh) script automatically sources all
 
 Add this to your `~/.bashrc`:
 ```bash
-if [ -f "$HOME/projects/scripts/init_all.sh" ]; then
-    source "$HOME/projects/scripts/init_all.sh"
+if [ -f "$HOME/projects/peddycoartte/scripts/init_all.sh" ]; then
+    source "$HOME/projects/peddycoartte/scripts/init_all.sh"
 fi
 ```
 

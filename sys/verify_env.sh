@@ -124,7 +124,7 @@ if $VERBOSE; then
     echo "📊 Per-module load time breakdown:"
     echo "──────────────────────────────────────────────"
 
-    SCRIPT_ROOT="$HOME/projects/scripts"
+    SCRIPT_ROOT="$HOME/projects/peddycoartte/scripts"
     total_time=0
     while IFS= read -r -d '' f; do
         start=$(date +%s%3N)

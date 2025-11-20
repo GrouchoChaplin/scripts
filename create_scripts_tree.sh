@@ -11,7 +11,7 @@
 set -euo pipefail
 
 # --- Parse arguments ---
-ROOT="${1:-$HOME/projects/scripts}"
+ROOT="${1:-$HOME/projects/peddycoartte/scripts}"
 GIT_INIT=false
 ORIGIN_URL=""
 UPDATE_README=false
@@ -62,8 +62,8 @@ The [\`init_all.sh\`](./init_all.sh) script automatically sources all
 
 Add this to your \`~/.bashrc\`:
 \`\`\`bash
-if [ -f "\$HOME/projects/scripts/init_all.sh" ]; then
-    source "\$HOME/projects/scripts/init_all.sh"
+if [ -f "\$HOME/projects/peddycoartte/scripts/init_all.sh" ]; then
+    source "\$HOME/projects/peddycoartte/scripts/init_all.sh"
 fi
 \`\`\`
 

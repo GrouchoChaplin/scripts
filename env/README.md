@@ -2,7 +2,7 @@
 
 This directory defines modular environment layers for your system.
 Each `.sh` file is automatically sourced in lexical order (01_, 10_, 20_, etc.)
-by the global loader `~/projects/scripts/init_all.sh`.
+by the global loader `~/projects/peddycoartte/scripts/init_all.sh`.
 
 ---
 

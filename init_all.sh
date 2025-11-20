@@ -2,14 +2,14 @@
 # ---------------------------------------------------------------------------
 # init_all.sh  —  Silent modular environment loader
 #
-# Loads custom environment scripts from ~/projects/scripts in a clean order:
+# Loads custom environment scripts from ~/projects/peddycoartte/scripts in a clean order:
 #   1. Environment and alias files (env/*.sh)
 #   2. All other module directories (git/, sys/, net/, etc.)
 #
 # Automatically ignores hidden folders like .cache, .git, .vscode, tmp, etc.
 #
 # Add to your ~/.bashrc:
-#     source "$HOME/projects/scripts/init_all.sh"
+#     source "$HOME/projects/peddycoartte/scripts/init_all.sh"
 #
 # Optional reload alias:
 #     reloadEnv
@@ -19,11 +19,11 @@
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
     echo "⚠️  This file should be sourced, not executed."
     echo "   Add this line to your ~/.bashrc instead:"
-    echo "     source \$HOME/projects/scripts/init_all.sh"
+    echo "     source \$HOME/projects/peddycoartte/scripts/init_all.sh"
     exit 1
 fi
 
-SCRIPT_ROOT="$HOME/projects/scripts"
+SCRIPT_ROOT="$HOME/projects/peddycoartte/scripts"
 [[ -d "$SCRIPT_ROOT" ]] || return 0 2>/dev/null || exit 0
 
 [[ -n "${INIT_VERBOSE:-}" ]] && echo "[init] Loading from $SCRIPT_ROOT..."
@@ -62,4 +62,4 @@ for dir in "$SCRIPT_ROOT"/*/; do
 done
 
 # --- 3️⃣ Define a quick reload alias ---------------------------------------
-alias reloadEnv="source $HOME/projects/scripts/init_all.sh >/dev/null 2>&1 && echo '🔁 Environment reloaded.'"
+alias reloadEnv="source $HOME/projects/peddycoartte/scripts/init_all.sh >/dev/null 2>&1 && echo '🔁 Environment reloaded.'"

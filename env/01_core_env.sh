@@ -79,8 +79,8 @@ alias cls='printf "\33[2J"';
 alias h='history'
 alias updateNOW='export NOW=$(date "+%Y_%m_%d_T%H_%M_%S") && echo $NOW'
 
-export SCRIPT_PREAMBLE="$HOME/projects/scripts/sys/script_preamble.sh"
-export SCRIPTS_HOME=/home/peddycoartte/projects/scripts
+export SCRIPT_PREAMBLE="$HOME/projects/peddycoartte/scripts/sys/script_preamble.sh"
+export SCRIPTS_HOME=/home/peddycoartte/projects/peddycoartte/scripts
 export PATH="${SCRIPTS_HOME}/backup":$PATH
 export PATH="${SCRIPTS_HOME}/conda":$PATH
 export PATH="${SCRIPTS_HOME}/env":$PATH
