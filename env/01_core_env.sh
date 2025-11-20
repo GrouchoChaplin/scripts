@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 # ---------------------------------------------------------------------------
 # 01_core_env.sh  —  Core environment setup
 #
@@ -90,3 +91,6 @@ export PATH="${SCRIPTS_HOME}/sys":$PATH
 export PATH="${SCRIPTS_HOME}/sys/ownership_tools":$PATH
 export PATH="${SCRIPTS_HOME}/test":$PATH
 
+export PROMPT_COMMAND='if [ "$(id -u)" -ne 0 ]; then 
+    echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/BASH/bash-history-$(date "+%Y-%m-%d").log; 
+fi'
