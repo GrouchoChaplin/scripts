@@ -9,8 +9,8 @@ NOW=$(date +%F-%H%M%S)
 START_TS=$(date +%s)
 
 BASE="/run/media/peddycoartte/MasterBackup"
-SRC_HOME="/home/peddycoartte"
-SRC_DEV="/home/peddycoartte/Development"
+SRC_HOME="/home/peddycoartte/projects"
+SRC_DEV="/home/peddycoartte/projects"
 DEST_HOME="$BASE/Nightly"
 DEST_DEV="$BASE/DevelopmentBackups"
 RETENTION_DAYS=30
