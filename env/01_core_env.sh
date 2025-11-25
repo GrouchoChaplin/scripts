@@ -85,6 +85,7 @@ export PATH="${SCRIPTS_HOME}/backup":$PATH
 export PATH="${SCRIPTS_HOME}/conda":$PATH
 export PATH="${SCRIPTS_HOME}/env":$PATH
 export PATH="${SCRIPTS_HOME}/git":$PATH
+export PATH="${SCRIPTS_HOME}/git/git-branch-status-master":$PATH
 export PATH="${SCRIPTS_HOME}/net":$PATH
 export PATH="${SCRIPTS_HOME}/search":$PATH
 export PATH="${SCRIPTS_HOME}/sys":$PATH
