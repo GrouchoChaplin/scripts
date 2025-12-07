@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Analyzer &mdash; Dart Backup Toolkit</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Analyzer &mdash; find_latest_flutter_source_vX.sh</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="analyzer.html" class="active">Analyzer</a>
+    <a href="reconstructor.html">Reconstructor</a>
+    <a href="launcher.html">Launcher</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h2>Purpose</h2>
+    <p>Scan backup roots, discover Dart files, and determine the newest instance per group, outputting CSV/JSON audit files.</p>
+  </section>
+  <section>
+    <h2>Typical Command</h2>
+<pre><code>find_latest_flutter_source_v1.9.2.sh \
+  --paths "/backup/rootA" \
+  --paths "/backup/rootB" \
+  --pattern "*ir_imagery_tools*" \
+  --group-by relpath \
+  --include-instances \
+  --csv dart_audit.csv \
+  --json dart_audit.json \
+  --log-file analyzer_run.log
+</code></pre>
+  </section>
+  <section>
+    <h2>Key Flags</h2>
+    <ul>
+      <li><code>--paths DIR</code> &ndash; one or more backup roots.</li>
+      <li><code>--pattern PATTERN</code> &ndash; subdirectory matcher (e.g. <code>*ir_imagery_tools*</code>).</li>
+      <li><code>--group-by</code> &ndash; <code>basename</code>, <code>relpath</code>, or <code>fullpath</code>.</li>
+      <li><code>--include-instances</code> &ndash; print all instances per group.</li>
+      <li><code>--csv / --json</code> &ndash; structured audit exports.</li>
+      <li><code>--diff-vs-latest</code> &ndash; compare each instance to the newest version.</li>
+    </ul>
+  </section>
+</main>
+<footer>
+  <p>Dart Backup Toolkit &mdash; Analyzer docs</p>
+</footer>
+</body>
+</html>

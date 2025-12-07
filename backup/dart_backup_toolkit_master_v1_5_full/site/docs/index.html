@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dart Backup Reconciliation Toolkit</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Dart Backup Reconciliation Toolkit</h1>
+  <nav>
+    <a href="index.html" class="active">Home</a>
+    <a href="analyzer.html">Analyzer</a>
+    <a href="reconstructor.html">Reconstructor</a>
+    <a href="launcher.html">Launcher</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h2>Overview</h2>
+    <p>This toolkit helps you reconcile Dart/Flutter source files across many backup roots, deterministically and reproducibly.</p>
+    <ul>
+      <li><strong>Analyzer</strong> – scans backup roots, finds Dart files, and determines the latest instance per group.</li>
+      <li><strong>Reconstructor</strong> – rebuilds a synthetic tree (latest-only or full history) from analyzer output.</li>
+      <li><strong>Comparer</strong> – compares reconstructed trees using your preferred diff tool.</li>
+      <li><strong>Launcher</strong> – a TUI command center with presets, logs, dashboards, and safety locks.</li>
+    </ul>
+  </section>
+  <section>
+    <h2>Quick Start</h2>
+<pre><code>./dart_backup_launcher.sh</code></pre>
+    <p>Use the launcher menu to run analyzer, reconstructor, comparer, and view logs/dashboards.</p>
+  </section>
+  <section>
+    <h2>Full Documentation</h2>
+    <p>See the full Markdown docs in your repo at <code>docs/UnifiedToolkitDocs.md</code>.</p>
+  </section>
+</main>
+<footer>
+  <p>Dart Backup Toolkit &mdash; static docs bundle</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reconstructor &mdash; Dart Backup Toolkit</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Reconstructor &mdash; reconstruct_latest_tree_vX.sh</h1>
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="analyzer.html">Analyzer</a>
+    <a href="reconstructor.html" class="active">Reconstructor</a>
+    <a href="launcher.html">Launcher</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h2>Purpose</h2>
+    <p>Rebuild a synthetic Dart tree using analyzer CSV/JSON, in either latest-only or full-history mode.</p>
+  </section>
+  <section>
+    <h2>Latest-only Example</h2>
+<pre><code>reconstruct_latest_tree_v1.1.1.sh \
+  --json dart_audit.json \
+  --out latest_tree/ \
+  --latest-only \
+  --verify-checksums \
+  --html-report latest_tree.html
+</code></pre>
+  </section>
+  <section>
+    <h2>Full-history Example</h2>
+<pre><code>reconstruct_latest_tree_v1.1.1.sh \
+  --csv dart_audit.csv \
+  --out full_history_tree/ \
+  --verify-checksums \
+  --html-report full_history.html
+</code></pre>
+  </section>
+</main>
+<footer>
+  <p>Dart Backup Toolkit &mdash; Reconstructor docs</p>
+</footer>
+</body>
+</html>
