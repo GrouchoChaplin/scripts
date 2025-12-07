@@ -1,21 +1,50 @@
 #!/usr/bin/env bash
 #
 # find_latest_flutter_source.sh
-# Flutter Source Version Finder v1.6
+# Flutter Source Version Finder v1.9.2
 #
-# - Scans dirs for Flutter-ish projects
-# - Ranks projects by latest source modification time
-# - Can rank using lib/ + pubspec.yaml only
-# - Optional HTML report with SHA256 + project overview
-# - Robust project-root detection for nested backup trees
+# - Search a base root folder for sub-folders matching a pattern (e.g., *ir_imagery_tools*)
+# - For each matched folder, gather all .dart files
+# - Group .dart files by a chosen key (basename | relpath | fullpath)
+# - For each group, find the latest-modified instance
+# - Optionally show all instances with:
+#       * path
+#       * modification time
+#       * size
+#       * SHA256
+# - Optional CSV and JSON export of all instances
+# - Optional diff vs latest summary
+# - Optional highlighting of newest instance in green (stdout)
+# - v1.9.2: parallel hashing (when xargs -P available) + path-first instance format
 #
 set -euo pipefail
 
-VERSION="1.6"
+VERSION="1.9.2"
 
-########################################
+##############################
+# Global flags / defaults
+##############################
+DEBUG=0                        # Set to 1 for debug logging
+DEFAULT_LOG_FILE="find_latest_flutter_source.log"
+LOG_FILE="$DEFAULT_LOG_FILE"
+
+BASE_DIR=""
+PATTERN="*ir_imagery_too*"     # Subdirectory name pattern to match
+
+LATEST_PER_FILE=1              # Always doing per-file analysis in this tool
+GROUP_BY_MODE="basename"       # basename | relpath | fullpath
+INCLUDE_INSTANCES=0            # If 1, show per-instance details
+
+CSV_EXPORT=""                  # If non-empty, path to CSV export file
+JSON_EXPORT=""                 # If non-empty, path to JSON export file
+JSON_ROWS=""                   # Accumulates JSON rows for final write
+
+DIFF_VS_LATEST=0               # If 1, show diff vs latest for older instances
+COLOR_NEWEST=0                 # If 1, highlight newest instance in green (stdout/log will see ANSI)
+
+##############################
 # Color helpers
-########################################
+##############################
 if [[ -t 1 ]]; then
   BOLD=$'\e[1m'
   GREEN=$'\e[32m'
@@ -26,67 +55,134 @@ else
   BOLD=""; GREEN=""; CYAN=""; YELLOW=""; RESET=""
 fi
 
-bold()  { printf '%b%s%b' "$BOLD" "$1" "$RESET"; }
-green() { printf '%b%s%b' "$GREEN" "$1" "$RESET"; }
-cyan()  { printf '%b%s%b' "$CYAN" "$1" "$RESET"; }
-yellow(){ printf '%b%s%b' "$YELLOW" "$1" "$RESET"; }
+bold()        { printf '%b%s%b\n' "$BOLD" "$1" "$RESET"; }
+green_text()  { printf '%b%s%b' "$GREEN" "$1" "$RESET"; }
+cyan_text()   { printf '%b%s%b' "$CYAN" "$1" "$RESET"; }
+yellow_text() { printf '%b%s%b' "$YELLOW" "$1" "$RESET"; }
 
-########################################
-# Defaults
-########################################
-PATH_PATTERNS=()
-TOP_FILES=20
-TOP_PROJECTS=0
-HTML_REPORT=0
-FZF_MODE=0
-EXCLUDE_BUILD=1
-SOURCE_ONLY=0
-RANK_LIB_ONLY=0
-SINCE_EPOCH=0
-DEBUG=0
-VALIDATE_PROJECT_ROOTS=0
+##############################
+# Logging helpers
+##############################
+debug() {
+  if [[ $DEBUG -eq 1 ]]; then
+    echo "$(yellow_text "[DEBUG]") $*" >&2
+  fi
+}
 
-########################################
+log() {
+  # Always log to stdout AND append to log file
+  echo "$1" | tee -a "$LOG_FILE"
+}
+
+##############################
+# Formatting helpers
+##############################
+format_newest() {
+  local text="$1"
+  if [[ $COLOR_NEWEST -eq 1 ]]; then
+    printf '\e[32m%s\e[0m' "$text"
+  else
+    printf '%s' "$text"
+  fi
+}
+
+show_diff_vs_latest() {
+  local newest_ts="$1"
+  local newest_sha="$2"
+  local newest_size="$3"
+  local file_ts="$4"
+  local file_sha="$5"
+  local file_size="$6"
+
+  local diff_text=""
+  local delta=$(( newest_ts - file_ts ))
+
+  if [[ $delta -gt 0 ]]; then
+    diff_text+="    Δ time: ${delta}s older\n"
+  fi
+
+  if [[ "$newest_size" != "$file_size" ]]; then
+    diff_text+="    Δ size: newest=${newest_size} vs this=${file_size}\n"
+  fi
+
+  if [[ "$newest_sha" != "$file_sha" ]]; then
+    diff_text+="    SHA mismatch\n"
+  fi
+
+  if [[ -n "$diff_text" ]]; then
+    printf "%b" "$diff_text"
+  fi
+}
+
+write_csv() {
+  local _group="$1"
+  local line="$2"
+  echo "$line" >> "$CSV_EXPORT"
+}
+
+write_json_row() {
+  local json="$1"
+  if [[ -z "$JSON_ROWS" ]]; then
+    JSON_ROWS="$json"
+  else
+    JSON_ROWS="$JSON_ROWS,$json"
+  fi
+}
+
+##############################
 # Usage
-########################################
+##############################
 usage() {
   cat <<EOF
 $(bold "find_latest_flutter_source.sh – Flutter Source Version Finder v$VERSION")
 
 Options:
-  --paths DIR1 [DIR2 ...]   One or more directories or glob patterns to scan
-  --top N                   Show top N modified files (default: $TOP_FILES)
-  --top-projects N          Show top N projects by recency
-  --since DATE              Only consider files modified on/after DATE
-                            (DATE passed to 'date -d', e.g. "2025-11-22")
-  --html-report             Generate flutter_source_report.html
-  --fzf                     Enable interactive fzf browser for files
-  --source-only             Only consider source/config files (no .so/.a/etc)
-                            Still includes CMakeLists.txt and *.cmake
-  --rank-lib-only           Only lib/ + pubspec.yaml affect project recency
-  --exclude-build           Exclude build/.dart_tool/.git (default)
-  --no-exclude-build        Include build/.dart_tool/.git
-  --debug                   Verbose internal logging to stderr
-  --validate-project-roots  Only list detected project roots and exit
-
+  --paths DIR               Base directory to scan (required)
+  --pattern PATTERN         Subdirectory pattern to match (default: $PATTERN)
+  --group-by MODE           Group key for per-file analysis:
+                              MODE is one of: basename | relpath | fullpath
+  --include-instances       Include per-instance file details (path, mtime, size, SHA256)
+  --csv FILE                Export per-instance data as CSV (append if exists)
+  --json FILE               Export per-instance data as JSON array
+  --diff-vs-latest          Show simple diff summary vs latest instance
+  --color-newest            Highlight newest instance in green (stdout + log)
+  --log-file FILE           Log output to a specified file (default: $DEFAULT_LOG_FILE)
+  --debug                   Enable debug logging
   -h, --help                Show this help
 
+Group-by modes:
+
+  basename   – group by just the filename (e.g. "netcdf_screen.dart").
+               All files with the same basename are grouped together.
+
+  relpath    – group by relative path under lib/.
+               Example (grouped together):
+                 /A/lib/screens/home/home_screen.dart
+                 /B/lib/screens/home/home_screen.dart
+
+  fullpath   – no grouping at all; each file is treated as distinct.
+
+Instance format (v1.9.2):
+
+  Path | Modification Time | Size | SHA256
+
 Example:
+
   find_latest_flutter_source.sh \\
-    --paths "/run/media/peddycoartte/MasterBackup/ProjectWorkingCopyBackups/ir_imagery_tools*" \\
-    --source-only --rank-lib-only --top 30 --top-projects 5 --html-report
+    --paths "/run/media/peddycoartte/MasterBackup/ProjectWorkingCopyBackups" \\
+    --pattern "*ir_imagery_tools*" \\
+    --group-by basename \\
+    --include-instances \\
+    --diff-vs-latest \\
+    --color-newest \\
+    --csv dart_audit.csv \\
+    --json dart_audit.json
 EOF
 }
 
-debug() {
-  if [[ $DEBUG -eq 1 ]]; then
-    echo "$(yellow "[DEBUG]") $*" >&2
-  fi
-}
-
-########################################
+##############################
 # Argument parsing
-########################################
+##############################
 if [[ $# -eq 0 ]]; then
   usage
   exit 0
@@ -96,36 +192,62 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --paths)
       shift
-      while [[ $# -gt 0 && ! "$1" =~ ^-- ]]; do
-        PATH_PATTERNS+=("$1")
-        shift
-      done
-      continue
+      BASE_DIR="${1:-}"
+      shift
       ;;
-    --top)
-      TOP_FILES="$2"; shift 2 ;;
-    --top-projects)
-      TOP_PROJECTS="$2"; shift 2 ;;
-    --since)
-      SINCE_EPOCH=$(date -d "$2" +%s); shift 2 ;;
-    --html-report)
-      HTML_REPORT=1; shift ;;
-    --fzf)
-      FZF_MODE=1; shift ;;
-    --source-only)
-      SOURCE_ONLY=1; shift ;;
-    --rank-lib-only)
-      RANK_LIB_ONLY=1; shift ;;
-    --exclude-build)
-      EXCLUDE_BUILD=1; shift ;;
-    --no-exclude-build|--include-build)
-      EXCLUDE_BUILD=0; shift ;;
+    --pattern)
+      shift
+      PATTERN="${1:-}"
+      shift
+      ;;
+    --group-by)
+      shift
+      case "${1:-}" in
+        basename|relpath|fullpath)
+          GROUP_BY_MODE="$1"
+          ;;
+        *)
+          echo "Invalid value for --group-by: ${1:-} (expected basename|relpath|fullpath)" >&2
+          exit 1
+          ;;
+      esac
+      shift
+      ;;
+    --include-instances)
+      INCLUDE_INSTANCES=1
+      shift
+      ;;
+    --csv)
+      shift
+      CSV_EXPORT="${1:-}"
+      shift
+      ;;
+    --json)
+      shift
+      JSON_EXPORT="${1:-}"
+      shift
+      ;;
+    --diff-vs-latest)
+      DIFF_VS_LATEST=1
+      shift
+      ;;
+    --color-newest)
+      COLOR_NEWEST=1
+      shift
+      ;;
+    --log-file)
+      shift
+      LOG_FILE="${1:-$DEFAULT_LOG_FILE}"
+      shift
+      ;;
     --debug)
-      DEBUG=1; shift ;;
-    --validate-project-roots)
-      VALIDATE_PROJECT_ROOTS=1; shift ;;
+      DEBUG=1
+      shift
+      ;;
     -h|--help)
-      usage; exit 0 ;;
+      usage
+      exit 0
+      ;;
     *)
       echo "Unknown option: $1" >&2
       usage
@@ -134,505 +256,242 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-if [[ ${#PATH_PATTERNS[@]} -eq 0 ]]; then
-  PATH_PATTERNS=(.)
-fi
-
-########################################
-# Expand glob patterns into real dirs
-########################################
-SCAN_DIRS=()
-for pat in "${PATH_PATTERNS[@]}"; do
-  # shellcheck disable=SC2086
-  matched=( $pat )
-  if [[ ${#matched[@]} -eq 0 ]]; then
-    debug "Pattern matched nothing: $pat"
-    continue
-  fi
-  for d in "${matched[@]}"; do
-    if [[ -d "$d" ]]; then
-      SCAN_DIRS+=("$d")
-    else
-      debug "Not a directory (skipped): $d"
-    fi
-  done
-done
-
-if [[ ${#SCAN_DIRS[@]} -eq 0 ]]; then
-  echo "No directories matched for --paths patterns." >&2
+if [[ -z "$BASE_DIR" ]]; then
+  echo "Error: --paths BASE_DIR is required." >&2
   exit 1
 fi
 
-debug "Scan dirs: ${SCAN_DIRS[*]}"
+##############################
+# CSV / JSON initialization
+##############################
+if [[ -n "$CSV_EXPORT" ]]; then
+  if [[ ! -f "$CSV_EXPORT" ]]; then
+    echo "group_key,path,mtime,size,sha256" > "$CSV_EXPORT"
+  fi
+fi
 
-########################################
-# Temp files
-########################################
-TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/flutter_source.XXXXXX")
-RAW_FILES="$TMPDIR/raw_files.tsv"      # epoch \t timestamp \t path
-SORTED_FILES="$TMPDIR/sorted_files.tsv"
-TOP_FILES_TSV="$TMPDIR/top_files.tsv"
-PROJECT_SUMMARY="$TMPDIR/project_summary.tsv"
-TOP_PROJECTS_TSV="$TMPDIR/top_projects.tsv"
+if [[ -n "$JSON_EXPORT" ]]; then
+  JSON_ROWS=""   # Ensure empty at start
+fi
 
-cleanup() {
-  rm -rf "$TMPDIR"
-}
-trap cleanup EXIT
+##############################
+# Find matching subdirectories
+##############################
+log "Base directory: $BASE_DIR"
+log "Searching for directories matching pattern '$PATTERN'..."
 
-########################################
-# Helpers
-########################################
-is_source_file() {
-  # Used only when SOURCE_ONLY=1
-  local f="$1"
-  local base
-  base=$(basename "$f")
+mapfile -t SCAN_DIRS < <(find "$BASE_DIR" -type d -name "$PATTERN" 2>/dev/null || true)
 
-  # Always allow pubspec + CMake
-  case "$base" in
-    pubspec.yaml|pubspec.lock|CMakeLists.txt) return 0 ;;
-  esac
+if [[ ${#SCAN_DIRS[@]} -eq 0 ]]; then
+  log "No subdirectories found matching pattern '$PATTERN'."
+  if [[ -n "$JSON_EXPORT" ]]; then
+    echo "[]" > "$JSON_EXPORT"
+  fi
+  exit 0
+fi
 
-  # Obvious code/config extensions
-  case "$f" in
-    *.dart|*.cmake|*.cc|*.cpp|*.c|*.h|*.hpp|*.json|*.yaml|*.yml|*.sh)
-      return 0
+debug "Found subfolders: ${SCAN_DIRS[*]}"
+
+##############################
+# Scan .dart files (parallel hashing)
+##############################
+declare -A dart_files  # key: group key, val: newline-separated "epoch,path,sha,size"
+
+get_group_key() {
+  local path="$1"
+  case "$GROUP_BY_MODE" in
+    basename)
+      basename "$path"
+      ;;
+    relpath)
+      # relative path under /lib/
+      local trimmed="${path#*/lib/}"
+      if [[ "$trimmed" == "$path" ]]; then
+        basename "$path"
+      else
+        echo "$trimmed"
+      fi
+      ;;
+    fullpath)
+      echo "$path"
+      ;;
+    *)
+      basename "$path"
       ;;
   esac
-
-  # Anything under lib/ is considered source-ish
-  if [[ "$f" == */lib/* ]]; then
-    return 0
-  fi
-
-  # Exclude binary-ish things
-  case "$f" in
-    *.so|*.a|*.o|*.dll|*.dylib|*~|*.swp)
-      return 1
-      ;;
-  esac
-
-  # Default: treat as non-source to keep SOURCE_ONLY tight
-  return 1
 }
 
-find_project_root() {
-  local path="$1"
-  local dir
-  dir=$(dirname "$path")
+log "Scanning .dart files in matched directories..."
 
-  local last_with_lib=""
-  # climb upwards, prefer pubspec.yaml
-  while [[ "$dir" != "/" && "$dir" != "." ]]; do
-    if [[ -f "$dir/pubspec.yaml" ]]; then
-      echo "$dir"
-      return 0
-    fi
-    if [[ -d "$dir/lib" ]]; then
-      last_with_lib="$dir"
-    fi
-    dir=$(dirname "$dir")
-  done
-
-  # fallback: lib-based root if we saw one
-  if [[ -n "$last_with_lib" ]]; then
-    echo "$last_with_lib"
-    return 0
-  fi
-
-  # final fallback: one of the scan roots that prefixes path
-  for root in "${SCAN_DIRS[@]}"; do
-    case "$path" in
-      "$root"/*) echo "$root"; return 0 ;;
-    esac
-  done
-
-  echo ""
-  return 1
-}
-
-is_ranked_source() {
-  local path="$1"
-  local base
-  base=$(basename "$path")
-
-  if [[ $RANK_LIB_ONLY -eq 1 ]]; then
-    if [[ "$path" == */lib/* ]]; then
-      return 0
-    fi
-    case "$base" in
-      pubspec.yaml|pubspec.lock) return 0 ;;
-    esac
-    return 1
-  fi
-
-  # otherwise, rank all files that passed SOURCE_ONLY/filters
-  return 0
-}
-
-########################################
-# Scan files (raw list)
-########################################
-echo "$(cyan "Scanning Flutter projects…")"
-
-> "$RAW_FILES"
-
+# Collect all .dart files from all SCAN_DIRS
+DART_FILES=()
 for dir in "${SCAN_DIRS[@]}"; do
-  [[ -d "$dir" ]] || continue
-
-  debug "Scanning dir: $dir"
-
-  # base find (exclude build /.git etc if requested)
-  FIND=(find "$dir" -type f)
-  if [[ $EXCLUDE_BUILD -eq 1 ]]; then
-    FIND+=( -not -path "*/build/*"
-            -not -path "*/.dart_tool/*"
-            -not -path "*/.git/*"
-            -not -path "*/.idea/*"
-            -not -path "*/.vscode/*"
-            -not -path "*/linux/flutter/ephemeral/*" )
-  fi
-
-  # run find
-  "${FIND[@]}" -print0 | while IFS= read -r -d '' f; do
-    if [[ $SOURCE_ONLY -eq 1 ]] && ! is_source_file "$f"; then
-      debug "SOURCE_ONLY filtered: $f"
-      continue
-    fi
-
-    local_epoch=$(stat -c '%Y' "$f" 2>/dev/null || echo 0)
-    if (( SINCE_EPOCH > 0 && local_epoch < SINCE_EPOCH )); then
-      debug "SINCE filtered: $f"
-      continue
-    fi
-    local_ts=$(stat -c '%y' "$f" 2>/dev/null | sed 's/ [+-][0-9]\{2\}:[0-9]\{2\}$//')
-    printf '%s\t%s\t%s\n' "$local_epoch" "$local_ts" "$f" >> "$RAW_FILES"
-  done
+  debug "  Collecting from: $dir"
+  while IFS= read -r f; do
+    DART_FILES+=("$f")
+  done < <(find "$dir" -type f -name "*.dart" 2>/dev/null || true)
 done
 
-if [[ ! -s "$RAW_FILES" ]]; then
-  echo "No files found matching criteria."
+if [[ ${#DART_FILES[@]} -eq 0 ]]; then
+  log "No .dart files found under matched directories."
+  if [[ -n "$JSON_EXPORT" ]]; then
+    echo "[]" > "$JSON_EXPORT"
+  fi
   exit 0
 fi
 
-debug "RAW_FILES lines: $(wc -l < "$RAW_FILES")"
-
-########################################
-# Sort and top N files
-########################################
-sort -r -n -k1,1 "$RAW_FILES" > "$SORTED_FILES"
-head -n "$TOP_FILES" "$SORTED_FILES" > "$TOP_FILES_TSV"
-
-########################################
-# Aggregate by project (using ALL files)
-########################################
-declare -A any_latest_epoch
-declare -A any_latest_ts
-declare -A ranked_latest_epoch
-declare -A ranked_latest_ts
-declare -A file_count
-declare -A git_last_commit
-
-while IFS=$'\t' read -r epoch ts path; do
-  pr=$(find_project_root "$path")
-  if [[ -z "$pr" ]]; then
-    debug "No project root for: $path"
-    continue
-  fi
-
-  # count files regardless of ranking
-  file_count["$pr"]=$(( ${file_count["$pr"]:-0} + 1 ))
-
-  # track any-file latest timestamp
-  if [[ -z "${any_latest_epoch[$pr]+x}" || epoch -gt ${any_latest_epoch[$pr]} ]]; then
-    any_latest_epoch["$pr"]=$epoch
-    any_latest_ts["$pr"]="$ts"
-  fi
-
-  # ranking subset (lib/pubspec if RANK_LIB_ONLY)
-  if is_ranked_source "$path"; then
-    if [[ -z "${ranked_latest_epoch[$pr]+x}" || epoch -gt ${ranked_latest_epoch[$pr]} ]]; then
-      ranked_latest_epoch["$pr"]=$epoch
-      ranked_latest_ts["$pr"]="$ts"
-    fi
-  fi
-
-  # git info only once
-  if [[ -d "$pr/.git" && -z "${git_last_commit[$pr]+x}" ]]; then
-    git_last_commit["$pr"]=$(
-      cd "$pr" && git log -1 --pretty='%cs %h' 2>/dev/null || echo "(no git)"
-    )
-  fi
-done < "$SORTED_FILES"
-
-if [[ ${#file_count[@]} -eq 0 ]]; then
-  echo "No project roots detected (no pubspec.yaml or lib/ found)."
-  exit 0
+# Detect if xargs -P is available
+SUPPORT_XARGS_P=0
+if xargs -P 2>/dev/null <<<"" >/dev/null 2>&1; then
+  SUPPORT_XARGS_P=1
 fi
 
-########################################
-# Build project summary (prefer ranked, fallback to any)
-########################################
-> "$PROJECT_SUMMARY"
+JOBS=$(( $(command -v nproc >/dev/null 2>&1 && nproc || echo 4) ))
 
-use_ranked=1
-if [[ ${#ranked_latest_epoch[@]} -eq 0 ]]; then
-  use_ranked=0
-  debug "No ranked sources found; falling back to all files for project recency."
-fi
-
-for pr in "${!file_count[@]}"; do
-  local_epoch=0
-  local_ts=""
-  if [[ $use_ranked -eq 1 && -n "${ranked_latest_epoch[$pr]+x}" ]]; then
-    local_epoch=${ranked_latest_epoch[$pr]}
-    local_ts=${ranked_latest_ts[$pr]}
-  else
-    local_epoch=${any_latest_epoch[$pr]}
-    local_ts=${any_latest_ts[$pr]}
-  fi
-  printf '%s\t%s\t%s\t%s\t%s\n' \
-    "$local_epoch" \
-    "$local_ts" \
-    "${git_last_commit[$pr]:-(no git)}" \
-    "${file_count[$pr]:-0}" \
-    "$pr" \
-    >> "$PROJECT_SUMMARY"
-done
-
-sort -r -n -k1,1 "$PROJECT_SUMMARY" > "$TOP_PROJECTS_TSV"
-
-# best-guess latest project
-read -r BEST_EPOCH BEST_TS BEST_GIT BEST_COUNT BEST_ROOT < <(head -n1 "$TOP_PROJECTS_TSV")
-
-debug "Best project: $BEST_ROOT @ $BEST_TS"
-
-########################################
-# Validation mode (just show roots, then exit)
-########################################
-if [[ $VALIDATE_PROJECT_ROOTS -eq 1 ]]; then
-  echo "$(bold "Detected project roots:")"
-  while IFS=$'\t' read -r epoch ts git files root; do
-    has_pub="no"
-    [[ -f "$root/pubspec.yaml" ]] && has_pub="yes"
-    printf "%s (files=%s, pubspec=%s)\n" "$root" "$files" "$has_pub"
-  done < "$TOP_PROJECTS_TSV"
-  exit 0
-fi
-
-########################################
-# Dashboard Summary (CLI)
-########################################
-echo ""
-echo "$(bold "📊 Dashboard Summary (v$VERSION)")"
-echo "-----------------------------------------------------------------------------"
-echo "Best-guess latest project:"
-echo "  $(green "$BEST_ROOT")  (latest ranked source: $BEST_TS)"
-if [[ $use_ranked -eq 1 && $RANK_LIB_ONLY -eq 1 ]]; then
-  echo "  (ranking based on lib/ + pubspec.yaml only)"
-elif [[ $use_ranked -eq 1 ]]; then
-  echo "  (ranking based on all ranked sources)"
+if [[ $SUPPORT_XARGS_P -eq 1 ]]; then
+  debug "Using parallel hashing with xargs -P $JOBS"
+  # Parallel hashing via xargs
+  while IFS=',' read -r ts path sha size; do
+    [[ -z "$path" ]] && continue
+    group_key=$(get_group_key "$path")
+    dart_files["$group_key"]+="${ts},${path},${sha},${size}"$'\n'
+  done < <(
+    printf '%s\0' "${DART_FILES[@]}" \
+      | xargs -0 -n 1 -P "$JOBS" bash -c '
+          file="$1"
+          ts=$(stat -c %Y "$file" 2>/dev/null || echo 0)
+          size=$(stat -c %s "$file" 2>/dev/null || echo 0)
+          sha=$(sha256sum "$file" 2>/dev/null | awk "{print \$1}")
+          printf "%s,%s,%s,%s\n" "$ts" "$file" "$sha" "$size"
+        ' _
+  )
 else
-  echo "  (no ranked sources under lib/ + pubspec; using all files)"
-fi
-echo "-----------------------------------------------------------------------------"
-printf "%-45s %-22s %-18s %-10s\n" "Project Root" "Latest Ranked Source" "Git Commit" "Files"
-
-while IFS=$'\t' read -r epoch ts git files root; do
-  printf "%-45s %-22s %-18s %-10s\n" "$(green "$root")" "$ts" "$git" "$files"
-done < "$TOP_PROJECTS_TSV"
-
-########################################
-# Top N Projects by recency (CLI)
-########################################
-if (( TOP_PROJECTS > 0 )); then
-  echo ""
-  echo "$(bold "🏆 Top $TOP_PROJECTS Projects by Recency")"
-  echo "-----------------------------------------------------------------------------"
-  rank=1
-  while IFS=$'\t' read -r epoch ts git files root && (( rank <= TOP_PROJECTS )); do
-    printf "#%d  %s %s (%s) %s files\n" \
-      "$rank" \
-      "$(green "$root")" \
-      "$ts" \
-      "$git" \
-      "$files"
-    ((rank++))
-  done < "$TOP_PROJECTS_TSV"
+  log "xargs -P not available; falling back to serial hashing."
+  for file in "${DART_FILES[@]}"; do
+    ts=$(stat -c %Y "$file" 2>/dev/null || echo 0)
+    size=$(stat -c %s "$file" 2>/dev/null || echo 0)
+    sha=$(sha256sum "$file" 2>/dev/null | awk '{print $1}')
+    group_key=$(get_group_key "$file")
+    dart_files["$group_key"]+="${ts},${file},${sha},${size}"$'\n'
+  done
 fi
 
-########################################
-# Top N modified files (CLI)
-########################################
-echo ""
-echo "$(bold "📄 Top $TOP_FILES Modified Files")"
-echo "-----------------------------------------------------------------------------"
-head -n "$TOP_FILES" "$SORTED_FILES" | while IFS=$'\t' read -r epoch ts path; do
-  printf "%s.0000000000 %s %s\n" "$epoch" "$ts" "$path"
+if [[ ${#dart_files[@]} -eq 0 ]]; then
+  log "No .dart files grouped successfully."
+  if [[ -n "$JSON_EXPORT" ]]; then
+    echo "[]" > "$JSON_EXPORT"
+  fi
+  exit 0
+fi
+
+##############################
+# Process per group
+##############################
+log "Processing Dart file groups..."
+
+for group_key in "${!dart_files[@]}"; do
+  echo "------------------------------------------------------------" | tee -a "$LOG_FILE"
+  log "Processing group key: $group_key"
+
+  # Sort instances newest → oldest by epoch (field 1)
+  sorted_files=$(echo -e "${dart_files["$group_key"]}" | sed '/^$/d' | sort -t ',' -k1,1nr)
+
+  # Extract newest instance
+  newest_line=$(echo "$sorted_files" | head -n 1)
+  newest_ts=$(echo "$newest_line" | cut -d',' -f1)
+  newest_path=$(echo "$newest_line" | cut -d',' -f2)
+  newest_sha=$(echo "$newest_line" | cut -d',' -f3)
+  newest_size=$(echo "$newest_line" | cut -d',' -f4)
+
+  log "Most recent version for group '$group_key':"
+  log "    Path    : $newest_path"
+  log "    Modified: $(date -d @"$newest_ts")"
+  log "    Size    : ${newest_size} bytes"
+  log "    SHA256  : $newest_sha"
+
+  ############################################################
+  # Per-instance detail (conditional)
+  # NEW FORMAT (v1.9.2):
+  #   Path | Modification Time | Size | SHA256
+  ############################################################
+  if [[ $INCLUDE_INSTANCES -eq 1 ]]; then
+    echo "" | tee -a "$LOG_FILE"
+    echo "Instances of group '$group_key':" | tee -a "$LOG_FILE"
+    echo "  Path | Modification Time | Size | SHA256" | tee -a "$LOG_FILE"
+
+    while IFS=',' read -r ts path sha size; do
+      [[ -n "$ts" ]] || continue  # skip empty lines
+      formatted_time=$(date -d @"$ts")
+
+      line="$path | $formatted_time | ${size} bytes | $sha"
+
+      if [[ "$ts" == "$newest_ts" && $COLOR_NEWEST -eq 1 ]]; then
+        fmt_line=$(format_newest "$line")
+      else
+        fmt_line="$line"
+      fi
+
+      echo "$fmt_line" | tee -a "$LOG_FILE"
+
+      # Diff vs latest (only for non-latest)
+      if [[ $DIFF_VS_LATEST -eq 1 && "$ts" != "$newest_ts" ]]; then
+        show_diff_vs_latest "$newest_ts" "$newest_sha" "$newest_size" "$ts" "$sha" "$size" \
+          | tee -a "$LOG_FILE"
+      fi
+
+      # CSV export (updated order)
+      if [[ -n "$CSV_EXPORT" ]]; then
+        csv_line="\"$group_key\",\"$path\",\"$formatted_time\",\"$size\",\"$sha\""
+        write_csv "$group_key" "$csv_line"
+      fi
+
+      # JSON export (updated order)
+      if [[ -n "$JSON_EXPORT" ]]; then
+        esc_path=${path//\"/\\\"}
+        esc_group=${group_key//\"/\\\"}
+        json_entry="{\"group_key\":\"$esc_group\",\"path\":\"$esc_path\",\"mtime\":\"$formatted_time\",\"size\":$size,\"sha256\":\"$sha\"}"
+        write_json_row "$json_entry"
+      fi
+
+    done <<< "$sorted_files"
+
+    echo "" | tee -a "$LOG_FILE"
+  else
+    # Even if we don't show instances, we may still want CSV/JSON
+    while IFS=',' read -r ts path sha size; do
+      [[ -n "$ts" ]] || continue
+      formatted_time=$(date -d @"$ts")
+
+      if [[ -n "$CSV_EXPORT" ]]; then
+        csv_line="\"$group_key\",\"$path\",\"$formatted_time\",\"$size\",\"$sha\""
+        write_csv "$group_key" "$csv_line"
+      fi
+
+      if [[ -n "$JSON_EXPORT" ]]; then
+        esc_path=${path//\"/\\\"}
+        esc_group=${group_key//\"/\\\"}
+        json_entry="{\"group_key\":\"$esc_group\",\"path\":\"$esc_path\",\"mtime\":\"$formatted_time\",\"size\":$size,\"sha256\":\"$sha\"}"
+        write_json_row "$json_entry"
+      fi
+
+    done <<< "$sorted_files"
+  fi
 done
 
-########################################
-# HTML report
-########################################
-if [[ $HTML_REPORT -eq 1 ]]; then
-  HTML="flutter_source_report.html"
-  echo ""
-  echo "Generating HTML → $HTML"
-
-  {
-    cat <<'EOF'
-<html><head>
-  <title>Flutter Source Report</title>
-  <style>
-    body { font-family: sans-serif; margin: 20px; }
-    h2, h3 { margin-top: 1.4em; }
-    table { border-collapse: collapse; width: 100%; margin-bottom: 1.2em; }
-    th, td { border: 1px solid #aaa; padding: 6px; font-size: 13px; }
-    th { background: #eee; cursor: pointer; }
-    .mono { font-family: monospace; }
-    .tag { display: inline-block; padding: 2px 6px; border-radius: 4px; background: #eef; margin-left: 6px; font-size: 11px; }
-  </style>
-  <script>
-    function sortTable(tableId, n) {
-      var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-      table = document.getElementById(tableId);
-      switching = true;
-      dir = "asc";
-      while (switching) {
-        switching = false;
-        rows = table.rows;
-        for (i = 1; i < (rows.length - 1); i++) {
-          shouldSwitch = false;
-          x = rows[i].getElementsByTagName("TD")[n];
-          y = rows[i + 1].getElementsByTagName("TD")[n];
-          if (!x || !y) continue;
-          if (dir == "asc" && x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-            shouldSwitch = true;
-            break;
-          }
-          if (dir == "desc" && x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-            shouldSwitch = true;
-            break;
-          }
-        }
-        if (shouldSwitch) {
-          rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-          switching = true;
-          switchcount++;
-        } else {
-          if (switchcount == 0 && dir == "asc") {
-            dir = "desc"; switching = true;
-          }
-        }
-      }
-    }
-  </script>
-</head><body>
-EOF
-
-    echo "  <h2>Flutter Source Modification Report (v$VERSION)</h2>"
-
-    # Best project block
-    echo "  <h3>Best-Guess Latest Project</h3>"
-    echo "  <p>"
-    printf '    <span class="mono">%s</span><br/>\n' "$BEST_ROOT"
-    printf '    Latest ranked source: <span class="mono">%s</span><br/>\n' "$BEST_TS"
-    printf '    Git: <span class="mono">%s</span><br/>\n' "$BEST_GIT"
-    printf '    Files scanned: <span class="mono">%s</span><br/>\n' "$BEST_COUNT"
-    printf '    <span class="tag">Ranking mode: %s</span>\n' "$(
-      if [[ $use_ranked -eq 1 && $RANK_LIB_ONLY -eq 1 ]]; then
-        echo "lib/ + pubspec.yaml only"
-      elif [[ $use_ranked -eq 1 ]]; then
-        echo "all ranked sources"
-      else
-        echo "all files (no ranked lib/pubspec sources found)"
-      fi
-    )"
-    echo ""
-    echo "  </p>"
-
-    # Projects overview table
-    cat <<'EOF'
-  <h3>Projects Overview</h3>
-  <table id="projectsTable">
-    <tr>
-      <th onclick="sortTable('projectsTable', 0)">Latest Ranked Source</th>
-      <th onclick="sortTable('projectsTable', 1)">Project Root</th>
-      <th onclick="sortTable('projectsTable', 2)">Git Commit</th>
-      <th onclick="sortTable('projectsTable', 3)">Files</th>
-    </tr>
-EOF
-
-    while IFS=$'\t' read -r epoch ts git files root; do
-      printf '    <tr><td class="mono">%s</td><td class="mono">%s</td><td class="mono">%s</td><td class="mono">%s</td></tr>\n' \
-        "$ts" "$root" "$git" "$files"
-    done < "$TOP_PROJECTS_TSV"
-
-    echo "  </table>"
-
-    # Top N projects (same as CLI)
-    if (( TOP_PROJECTS > 0 )); then
-      echo "  <h3>Top ${TOP_PROJECTS} Projects by Recency</h3>"
-      cat <<'EOF'
-  <table id="topProjectsTable">
-    <tr>
-      <th onclick="sortTable('topProjectsTable', 0)">#</th>
-      <th onclick="sortTable('topProjectsTable', 1)">Latest Ranked Source</th>
-      <th onclick="sortTable('topProjectsTable', 2)">Project Root</th>
-      <th onclick="sortTable('topProjectsTable', 3)">Git Commit</th>
-      <th onclick="sortTable('topProjectsTable', 4)">Files</th>
-    </tr>
-EOF
-      rank=1
-      while IFS=$'\t' read -r epoch ts git files root && (( rank <= TOP_PROJECTS )); do
-        printf '    <tr><td class="mono">%d</td><td class="mono">%s</td><td class="mono">%s</td><td class="mono">%s</td><td class="mono">%s</td></tr>\n' \
-          "$rank" "$ts" "$root" "$git" "$files"
-        ((rank++))
-      done < "$TOP_PROJECTS_TSV"
-      echo "  </table>"
-    fi
-
-    # Top files table with SHA256
-    echo "  <h3>Top ${TOP_FILES} Modified Files</h3>"
-    cat <<'EOF'
-  <table id="filesTable">
-    <tr>
-      <th onclick="sortTable('filesTable', 0)">Timestamp</th>
-      <th onclick="sortTable('filesTable', 1)">SHA256</th>
-      <th onclick="sortTable('filesTable', 2)">Path</th>
-    </tr>
-EOF
-
-    head -n "$TOP_FILES" "$SORTED_FILES" | while IFS=$'\t' read -r epoch ts path; do
-      if [[ -f "$path" ]]; then
-        sha=$(sha256sum "$path" 2>/dev/null | awk '{print $1}')
-      else
-        sha="(missing)"
-      fi
-      printf '    <tr><td class="mono">%s</td><td class="mono">%s</td><td class="mono">%s</td></tr>\n' \
-        "$ts" "$sha" "$path"
-    done
-
-    cat <<'EOF'
-  </table>
-</body></html>
-EOF
-  } > "$HTML"
-fi
-
-########################################
-# fzf browser (optional)
-########################################
-if [[ $FZF_MODE -eq 1 ]]; then
-  if ! command -v fzf >/dev/null 2>&1; then
-    echo "fzf requested but not found in PATH; skipping interactive mode." >&2
+##############################
+# Finalize JSON (if requested)
+##############################
+if [[ -n "$JSON_EXPORT" ]]; then
+  if [[ -z "$JSON_ROWS" ]]; then
+    echo "[]" > "$JSON_EXPORT"
   else
-    echo ""
-    echo "Launching fzf browser…"
-    awk -F'\t' '{printf "%s.0000000000 %s %s\n", $1, $2, $3}' "$TOP_FILES_TSV" | fzf
+    printf '[%s]\n' "$JSON_ROWS" > "$JSON_EXPORT"
   fi
+  log "JSON export written to: $JSON_EXPORT"
 fi
 
-echo ""
-echo "$(green "Done (v$VERSION).")"
+if [[ -n "$CSV_EXPORT" ]]; then
+  log "CSV export written to: $CSV_EXPORT"
+fi
+
+log "Done (v$VERSION)."

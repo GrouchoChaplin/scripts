@@ -29,7 +29,7 @@ RESET="\033[0m"
 
 # --- Defaults ---
 PARALLEL_JOBS=28 # "$(nproc)"
-TARGET_DIR="/run/media/peddycoartte/Development/"
+TARGET_DIR="/run/media/peddycoartte/MasterBackup/Nightly/"
 LOG_FILE="/tmp/parallel_take_own_$(date +'%Y-%m-%d_%H-%M-%S').log"
 
 # --- Gather current user/group before sudo ---
@@ -37,8 +37,8 @@ USER_NAME="$(id -un)"
 GROUP_NAME="$(id -gn)"
 
 
-# --- Silence GNU Parallel citation notice ---
-parallel --citation >/dev/null 2>&1 || true
+# # --- Silence GNU Parallel citation notice ---
+# parallel --citation >/dev/null 2>&1 || true
 
 # --- Banner ---
 echo

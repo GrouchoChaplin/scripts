@@ -1,1 +1,0 @@
-# uninstall script placeholder
