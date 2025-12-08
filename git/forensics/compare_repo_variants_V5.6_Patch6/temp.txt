@@ -1,0 +1,655 @@
+=== Testing repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools ===
+1758293158
+0
+
+=== Testing repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops ===
+1755207651
+101
+
+=== Testing repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/jsigconversiontools.oops_2 ===
+1755207651
+22
+
+=== Testing repo: /run/media/peddycoartte/MasterBackup/Nightly/2025-10-10/projects/jctcs/TEMP/jsigconversiontools ===
+1758214004
+10
+
+UID          PID    PPID  C STIME TTY          TIME CMD
+root           1       0  0 Nov04 ?        00:01:15 /usr/lib/systemd/systemd --switched-root --system --deserialize 18
+root           2       0  0 Nov04 ?        00:00:01 [kthreadd]
+root           3       2  0 Nov04 ?        00:00:00 [rcu_gp]
+root           4       2  0 Nov04 ?        00:00:00 [rcu_par_gp]
+root           5       2  0 Nov04 ?        00:00:00 [slub_flushwq]
+root           7       2  0 Nov04 ?        00:00:00 [kworker/0:0H-events_highpri]
+root          10       2  0 Nov04 ?        00:00:00 [mm_percpu_wq]
+root          11       2  0 Nov04 ?        00:00:00 [rcu_tasks_rude_]
+root          12       2  0 Nov04 ?        00:00:00 [rcu_tasks_trace]
+root          13       2  0 Nov04 ?        00:00:10 [ksoftirqd/0]
+root          14       2  0 Nov04 ?        00:03:33 [rcu_sched]
+root          15       2  0 Nov04 ?        00:00:15 [migration/0]
+root          16       2  0 Nov04 ?        00:00:00 [watchdog/0]
+root          17       2  0 Nov04 ?        00:00:00 [cpuhp/0]
+root          18       2  0 Nov04 ?        00:00:00 [cpuhp/1]
+root          19       2  0 Nov04 ?        00:00:00 [watchdog/1]
+root          20       2  0 Nov04 ?        00:00:02 [migration/1]
+root          21       2  0 Nov04 ?        00:00:02 [ksoftirqd/1]
+root          23       2  0 Nov04 ?        00:00:00 [kworker/1:0H-events_highpri]
+root          24       2  0 Nov04 ?        00:00:00 [cpuhp/2]
+root          25       2  0 Nov04 ?        00:00:00 [watchdog/2]
+root          26       2  0 Nov04 ?        00:00:06 [migration/2]
+root          27       2  0 Nov04 ?        00:00:08 [ksoftirqd/2]
+root          29       2  0 Nov04 ?        00:00:00 [kworker/2:0H-events_highpri]
+root          30       2  0 Nov04 ?        00:00:00 [cpuhp/3]
+root          31       2  0 Nov04 ?        00:00:01 [watchdog/3]
+root          32       2  0 Nov04 ?        00:00:01 [migration/3]
+root          33       2  0 Nov04 ?        00:00:00 [ksoftirqd/3]
+root          35       2  0 Nov04 ?        00:00:00 [kworker/3:0H-events_highpri]
+root          36       2  0 Nov04 ?        00:00:00 [cpuhp/4]
+root          37       2  0 Nov04 ?        00:00:00 [watchdog/4]
+root          38       2  0 Nov04 ?        00:00:06 [migration/4]
+root          39       2  0 Nov04 ?        00:00:09 [ksoftirqd/4]
+root          41       2  0 Nov04 ?        00:00:00 [kworker/4:0H-events_highpri]
+root          42       2  0 Nov04 ?        00:00:00 [cpuhp/5]
+root          43       2  0 Nov04 ?        00:00:01 [watchdog/5]
+root          44       2  0 Nov04 ?        00:00:01 [migration/5]
+root          45       2  0 Nov04 ?        00:00:00 [ksoftirqd/5]
+root          47       2  0 Nov04 ?        00:00:00 [kworker/5:0H-events_highpri]
+root          48       2  0 Nov04 ?        00:00:00 [cpuhp/6]
+root          49       2  0 Nov04 ?        00:00:00 [watchdog/6]
+root          50       2  0 Nov04 ?        00:00:05 [migration/6]
+root          51       2  0 Nov04 ?        00:00:09 [ksoftirqd/6]
+root          53       2  0 Nov04 ?        00:00:00 [kworker/6:0H-events_highpri]
+root          54       2  0 Nov04 ?        00:00:00 [cpuhp/7]
+root          55       2  0 Nov04 ?        00:00:01 [watchdog/7]
+root          56       2  0 Nov04 ?        00:00:01 [migration/7]
+root          57       2  0 Nov04 ?        00:00:00 [ksoftirqd/7]
+root          59       2  0 Nov04 ?        00:00:00 [kworker/7:0H-events_highpri]
+root          60       2  0 Nov04 ?        00:00:00 [cpuhp/8]
+root          61       2  0 Nov04 ?        00:00:01 [watchdog/8]
+root          62       2  0 Nov04 ?        00:00:00 [migration/8]
+root          63       2  0 Nov04 ?        00:00:12 [ksoftirqd/8]
+root          65       2  0 Nov04 ?        00:00:00 [kworker/8:0H-events_highpri]
+root          66       2  0 Nov04 ?        00:00:00 [cpuhp/9]
+root          67       2  0 Nov04 ?        00:00:01 [watchdog/9]
+root          68       2  0 Nov04 ?        00:00:00 [migration/9]
+root          69       2  0 Nov04 ?        00:00:00 [ksoftirqd/9]
+root          71       2  0 Nov04 ?        00:00:00 [kworker/9:0H-events_highpri]
+root          72       2  0 Nov04 ?        00:00:00 [cpuhp/10]
+root          73       2  0 Nov04 ?        00:00:00 [watchdog/10]
+root          74       2  0 Nov04 ?        00:00:00 [migration/10]
+root          75       2  0 Nov04 ?        00:00:13 [ksoftirqd/10]
+root          77       2  0 Nov04 ?        00:00:00 [kworker/10:0H-events_highpri]
+root          78       2  0 Nov04 ?        00:00:00 [cpuhp/11]
+root          79       2  0 Nov04 ?        00:00:01 [watchdog/11]
+root          80       2  0 Nov04 ?        00:00:00 [migration/11]
+root          81       2  0 Nov04 ?        00:00:00 [ksoftirqd/11]
+root          83       2  0 Nov04 ?        00:00:00 [kworker/11:0H-events_highpri]
+root          84       2  0 Nov04 ?        00:00:00 [cpuhp/12]
+root          85       2  0 Nov04 ?        00:00:00 [watchdog/12]
+root          86       2  0 Nov04 ?        00:00:08 [migration/12]
+root          87       2  0 Nov04 ?        00:00:10 [ksoftirqd/12]
+root          89       2  0 Nov04 ?        00:00:00 [kworker/12:0H-events_highpri]
+root          90       2  0 Nov04 ?        00:00:00 [cpuhp/13]
+root          91       2  0 Nov04 ?        00:00:01 [watchdog/13]
+root          92       2  0 Nov04 ?        00:00:01 [migration/13]
+root          93       2  0 Nov04 ?        00:00:00 [ksoftirqd/13]
+root          95       2  0 Nov04 ?        00:00:00 [kworker/13:0H-events_highpri]
+root          96       2  0 Nov04 ?        00:00:00 [cpuhp/14]
+root          97       2  0 Nov04 ?        00:00:00 [watchdog/14]
+root          98       2  0 Nov04 ?        00:00:06 [migration/14]
+root          99       2  0 Nov04 ?        00:00:37 [ksoftirqd/14]
+root         101       2  0 Nov04 ?        00:00:00 [kworker/14:0H-events_highpri]
+root         102       2  0 Nov04 ?        00:00:00 [cpuhp/15]
+root         103       2  0 Nov04 ?        00:00:01 [watchdog/15]
+root         104       2  0 Nov04 ?        00:00:01 [migration/15]
+root         105       2  0 Nov04 ?        00:00:00 [ksoftirqd/15]
+root         107       2  0 Nov04 ?        00:00:00 [kworker/15:0H-events_highpri]
+root         108       2  0 Nov04 ?        00:00:00 [cpuhp/16]
+root         109       2  0 Nov04 ?        00:00:00 [watchdog/16]
+root         110       2  0 Nov04 ?        00:00:19 [migration/16]
+root         111       2  0 Nov04 ?        00:00:25 [ksoftirqd/16]
+root         113       2  0 Nov04 ?        00:00:00 [kworker/16:0H-events_highpri]
+root         114       2  0 Nov04 ?        00:00:00 [cpuhp/17]
+root         115       2  0 Nov04 ?        00:00:01 [watchdog/17]
+root         116       2  0 Nov04 ?        00:00:12 [migration/17]
+root         117       2  0 Nov04 ?        00:00:10 [ksoftirqd/17]
+root         119       2  0 Nov04 ?        00:00:00 [kworker/17:0H-events_highpri]
+root         120       2  0 Nov04 ?        00:00:00 [cpuhp/18]
+root         121       2  0 Nov04 ?        00:00:01 [watchdog/18]
+root         122       2  0 Nov04 ?        00:00:09 [migration/18]
+root         123       2  0 Nov04 ?        00:00:04 [ksoftirqd/18]
+root         125       2  0 Nov04 ?        00:00:00 [kworker/18:0H-events_highpri]
+root         126       2  0 Nov04 ?        00:00:00 [cpuhp/19]
+root         127       2  0 Nov04 ?        00:00:01 [watchdog/19]
+root         128       2  0 Nov04 ?        00:00:07 [migration/19]
+root         129       2  0 Nov04 ?        00:00:02 [ksoftirqd/19]
+root         131       2  0 Nov04 ?        00:00:00 [kworker/19:0H-events_highpri]
+root         132       2  0 Nov04 ?        00:00:00 [cpuhp/20]
+root         133       2  0 Nov04 ?        00:00:01 [watchdog/20]
+root         134       2  0 Nov04 ?        00:00:07 [migration/20]
+root         135       2  0 Nov04 ?        00:00:01 [ksoftirqd/20]
+root         137       2  0 Nov04 ?        00:00:00 [kworker/20:0H-events_highpri]
+root         138       2  0 Nov04 ?        00:00:00 [cpuhp/21]
+root         139       2  0 Nov04 ?        00:00:01 [watchdog/21]
+root         140       2  0 Nov04 ?        00:00:06 [migration/21]
+root         141       2  0 Nov04 ?        00:00:01 [ksoftirqd/21]
+root         143       2  0 Nov04 ?        00:00:00 [kworker/21:0H-events_highpri]
+root         144       2  0 Nov04 ?        00:00:00 [cpuhp/22]
+root         145       2  0 Nov04 ?        00:00:01 [watchdog/22]
+root         146       2  0 Nov04 ?        00:00:05 [migration/22]
+root         147       2  0 Nov04 ?        00:00:00 [ksoftirqd/22]
+root         149       2  0 Nov04 ?        00:00:00 [kworker/22:0H-kblockd]
+root         150       2  0 Nov04 ?        00:00:00 [cpuhp/23]
+root         151       2  0 Nov04 ?        00:00:01 [watchdog/23]
+root         152       2  0 Nov04 ?        00:00:05 [migration/23]
+root         153       2  0 Nov04 ?        00:00:00 [ksoftirqd/23]
+root         155       2  0 Nov04 ?        00:00:00 [kworker/23:0H-events_highpri]
+root         156       2  0 Nov04 ?        00:00:00 [cpuhp/24]
+root         157       2  0 Nov04 ?        00:00:01 [watchdog/24]
+root         158       2  0 Nov04 ?        00:00:05 [migration/24]
+root         159       2  0 Nov04 ?        00:00:00 [ksoftirqd/24]
+root         161       2  0 Nov04 ?        00:00:00 [kworker/24:0H-events_highpri]
+root         162       2  0 Nov04 ?        00:00:00 [cpuhp/25]
+root         163       2  0 Nov04 ?        00:00:01 [watchdog/25]
+root         164       2  0 Nov04 ?        00:00:04 [migration/25]
+root         165       2  0 Nov04 ?        00:00:00 [ksoftirqd/25]
+root         167       2  0 Nov04 ?        00:00:00 [kworker/25:0H-events_highpri]
+root         168       2  0 Nov04 ?        00:00:00 [cpuhp/26]
+root         169       2  0 Nov04 ?        00:00:01 [watchdog/26]
+root         170       2  0 Nov04 ?        00:00:04 [migration/26]
+root         171       2  0 Nov04 ?        00:00:00 [ksoftirqd/26]
+root         173       2  0 Nov04 ?        00:00:00 [kworker/26:0H-events_highpri]
+root         174       2  0 Nov04 ?        00:00:00 [cpuhp/27]
+root         175       2  0 Nov04 ?        00:00:01 [watchdog/27]
+root         176       2  0 Nov04 ?        00:00:04 [migration/27]
+root         177       2  0 Nov04 ?        00:00:00 [ksoftirqd/27]
+root         179       2  0 Nov04 ?        00:00:00 [kworker/27:0H-events_highpri]
+root         180       2  0 Nov04 ?        00:00:00 [cpuhp/28]
+root         181       2  0 Nov04 ?        00:00:01 [watchdog/28]
+root         182       2  0 Nov04 ?        00:00:03 [migration/28]
+root         183       2  0 Nov04 ?        00:00:00 [ksoftirqd/28]
+root         185       2  0 Nov04 ?        00:00:00 [kworker/28:0H-events_highpri]
+root         186       2  0 Nov04 ?        00:00:00 [cpuhp/29]
+root         187       2  0 Nov04 ?        00:00:01 [watchdog/29]
+root         188       2  0 Nov04 ?        00:00:04 [migration/29]
+root         189       2  0 Nov04 ?        00:00:00 [ksoftirqd/29]
+root         191       2  0 Nov04 ?        00:00:00 [kworker/29:0H-events_highpri]
+root         192       2  0 Nov04 ?        00:00:00 [cpuhp/30]
+root         193       2  0 Nov04 ?        00:00:01 [watchdog/30]
+root         194       2  0 Nov04 ?        00:00:04 [migration/30]
+root         195       2  0 Nov04 ?        00:00:00 [ksoftirqd/30]
+root         197       2  0 Nov04 ?        00:00:00 [kworker/30:0H-events_highpri]
+root         198       2  0 Nov04 ?        00:00:00 [cpuhp/31]
+root         199       2  0 Nov04 ?        00:00:01 [watchdog/31]
+root         200       2  0 Nov04 ?        00:00:04 [migration/31]
+root         201       2  0 Nov04 ?        00:00:00 [ksoftirqd/31]
+root         203       2  0 Nov04 ?        00:00:00 [kworker/31:0H-events_highpri]
+root         236       2  0 Nov04 ?        00:00:00 [kdevtmpfs]
+root         237       2  0 Nov04 ?        00:00:00 [netns]
+root         238       2  0 Nov04 ?        00:06:20 [kauditd]
+root         242       2  0 Nov04 ?        00:00:01 [khungtaskd]
+root         243       2  0 Nov04 ?        00:00:00 [oom_reaper]
+root         244       2  0 Nov04 ?        00:00:00 [writeback]
+root         245       2  0 Nov04 ?        00:00:20 [kcompactd0]
+root         246       2  0 Nov04 ?        00:00:00 [ksmd]
+root         247       2  0 Nov04 ?        00:00:19 [khugepaged]
+root         248       2  0 Nov04 ?        00:00:00 [crypto]
+root         249       2  0 Nov04 ?        00:00:00 [kintegrityd]
+root         250       2  0 Nov04 ?        00:00:00 [kblockd]
+root         251       2  0 Nov04 ?        00:00:00 [blkcg_punt_bio]
+root         254       2  0 Nov04 ?        00:00:00 [tpm_dev_wq]
+root         255       2  0 Nov04 ?        00:00:00 [md]
+root         256       2  0 Nov04 ?        00:00:00 [md_bitmap]
+root         257       2  0 Nov04 ?        00:00:00 [edac-poller]
+root         258       2  0 Nov04 ?        00:00:00 [watchdogd]
+root         262       2  0 Nov04 ?        00:00:11 [kworker/2:1H-kblockd]
+root         305       2  0 Nov04 ?        00:05:12 [kswapd0]
+root         366       2  0 Nov04 ?        00:00:00 [kthrotld]
+root         369       2  0 Nov04 ?        00:00:00 [irq/138-aerdrv]
+root         370       2  0 Nov04 ?        00:00:00 [irq/139-pciehp]
+root         371       2  0 Nov04 ?        00:00:00 [irq/140-aerdrv]
+root         372       2  0 Nov04 ?        00:00:00 [irq/143-pciehp]
+root         373       2  0 Nov04 ?        00:00:00 [irq/145-pciehp]
+root         374       2  0 Nov04 ?        00:00:00 [irq/165-aerdrv]
+root         375       2  0 Nov04 ?        00:00:00 [acpi_thermal_pm]
+root         376       2  0 Nov04 ?        00:00:00 [kmpath_rdacd]
+root         377       2  0 Nov04 ?        00:00:00 [kaluad]
+root         379       2  0 Nov04 ?        00:00:00 [hfi-updates]
+root         380       2  0 Nov04 ?        00:00:13 [kworker/6:1H-events_highpri]
+root         381       2  0 Nov04 ?        00:00:16 [kworker/8:1H-kblockd]
+root         382       2  0 Nov04 ?        00:00:00 [ipv6_addrconf]
+root         383       2  0 Nov04 ?        00:00:00 [kstrp]
+root         428       2  0 Nov04 ?        00:00:00 [zswap-shrink]
+root         446       2  0 Nov04 ?        00:00:00 [USBC000:00-con1]
+root         454       2  0 Nov04 ?        00:00:02 [kworker/13:1H-kblockd]
+root         483       2  0 Nov04 ?        00:00:05 [kworker/5:1H-events_highpri]
+root         487       2  0 Nov04 ?        00:00:12 [kworker/14:1H-kblockd]
+root         492       2  0 Nov04 ?        00:00:18 [kworker/10:1H-kblockd]
+root         501       2  0 Nov04 ?        00:00:09 [kworker/17:1H-kblockd]
+root         509       2  0 Nov04 ?        00:00:15 [kworker/12:1H-kblockd]
+root         535       2  0 Nov04 ?        00:00:13 [kworker/4:1H-events_highpri]
+root         649       2  0 Nov04 ?        00:00:00 [USBC000:00-con2]
+root         736       2  0 Nov04 ?        00:00:09 [kworker/16:1H-kblockd]
+root         790       2  0 Nov04 ?        00:00:00 [ata_sff]
+root         793       2  0 Nov04 ?        00:00:00 [nvme-wq]
+root         794       2  0 Nov04 ?        00:00:00 [nvme-reset-wq]
+root         795       2  0 Nov04 ?        00:00:00 [nvme-delete-wq]
+root         798       2  0 Nov04 ?        00:00:01 [kworker/23:1H-kblockd]
+root         820       2  0 Nov04 ?        00:00:01 [kworker/24:1H-kblockd]
+root         822       2  0 Nov04 ?        00:00:00 [ttm]
+root         823       2  0 Nov04 ?        00:00:00 [card0-crtc0]
+root         824       2  0 Nov04 ?        00:00:00 [card0-crtc1]
+root         825       2  0 Nov04 ?        00:00:00 [card0-crtc2]
+root         826       2  0 Nov04 ?        00:00:00 [card0-crtc3]
+root         828       2  0 Nov04 ?        00:00:00 [xfsalloc]
+root         829       2  0 Nov04 ?        00:00:00 [xfs_mru_cache]
+root         838       2  0 Nov04 ?        00:00:01 [kworker/22:1H-kblockd]
+root         850       2  0 Nov04 ?        00:00:08 [kworker/0:1H-kblockd]
+root         855       2  0 Nov04 ?        00:00:00 [uas]
+root         859       2  0 Nov04 ?        00:00:02 [kworker/21:1H-xfs-log/dm-0]
+root         860       2  0 Nov04 ?        00:00:01 [kworker/11:1H-xfs-log/dm-3]
+root         861       2  0 Nov04 ?        00:00:00 [kworker/7:1H-kblockd]
+root         862       2  0 Nov04 ?        00:00:01 [kworker/3:1H-kblockd]
+root         863       2  0 Nov04 ?        00:00:01 [kworker/15:1H-xfs-log/dm-8]
+root         864       2  0 Nov04 ?        00:00:01 [kworker/26:1H-xfs-log/dm-2]
+root         865       2  0 Nov04 ?        00:00:05 [kworker/1:1H-kblockd]
+root         866       2  0 Nov04 ?        00:00:07 [kworker/18:1H-kblockd]
+root         867       2  0 Nov04 ?        00:00:02 [kworker/20:1H-kblockd]
+root         868       2  0 Nov04 ?        00:00:02 [kworker/25:1H-kblockd]
+root         869       2  0 Nov04 ?        00:00:02 [kworker/27:1H-xfs-log/dm-6]
+root         870       2  0 Nov04 ?        00:00:08 [kworker/30:1H-kblockd]
+root         871       2  0 Nov04 ?        00:00:01 [kworker/28:1H-kblockd]
+root         872       2  0 Nov04 ?        00:00:08 [kworker/29:1H-kblockd]
+root         900       2  0 Nov04 ?        00:00:00 [USBC000:00-con3]
+root         950       2  0 Nov04 ?        00:00:03 [kworker/19:1H-kblockd]
+root        1000       2  0 Nov04 ?        00:00:00 [kdmflush/253:0]
+root        1009       2  0 Nov04 ?        00:00:00 [kdmflush/253:1]
+root        1037       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-0]
+root        1038       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-0]
+root        1039       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-0]
+root        1040       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1041       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1042       2  0 Nov04 ?        00:00:00 [xfs-log/dm-0]
+root        1043       2  0 Nov04 ?        00:01:53 [xfsaild/dm-0]
+root        1149       1  0 Nov04 ?        00:00:29 /usr/lib/systemd/systemd-journald
+root        1160       2  0 Nov04 ?        00:00:00 [kworker/9:1H-xfs-log/dm-5]
+root        1170       2  0 Nov04 ?        00:00:00 [rpciod]
+root        1171       2  0 Nov04 ?        00:00:00 [xprtiod]
+root        1190       1  0 Nov04 ?        00:00:02 /usr/lib/systemd/systemd-udevd
+root        1255       2  0 Nov04 ?        00:00:00 [kmemstick]
+root        1256       2  0 Nov04 ?        00:00:00 [irq/169-mei_me]
+root        1300       2  0 Nov04 ?        00:00:03 [kworker/31:1H-kblockd]
+root        1308       2  0 Nov04 ?        00:00:00 [kdmflush/253:2]
+root        1309       2  0 Nov04 ?        00:00:00 [kdmflush/253:3]
+root        1310       2  0 Nov04 ?        00:00:00 [kdmflush/253:4]
+root        1311       2  0 Nov04 ?        00:00:00 [kdmflush/253:5]
+root        1312       2  0 Nov04 ?        00:00:00 [kdmflush/253:6]
+root        1313       2  0 Nov04 ?        00:00:00 [kdmflush/253:7]
+root        1314       2  0 Nov04 ?        00:00:00 [kdmflush/253:8]
+root        1377       2  0 Nov04 ?        00:00:00 [cfg80211]
+root        1380       2  0 Nov04 ?        00:00:48 [irq/191-iwlwifi]
+root        1383       2  0 Nov04 ?        00:00:03 [irq/192-iwlwifi]
+root        1384       2  0 Nov04 ?        00:00:04 [irq/193-iwlwifi]
+root        1385       2  0 Nov04 ?        00:00:04 [irq/194-iwlwifi]
+root        1386       2  0 Nov04 ?        00:00:03 [irq/195-iwlwifi]
+root        1388       2  0 Nov04 ?        00:00:03 [irq/196-iwlwifi]
+root        1389       2  0 Nov04 ?        00:00:03 [irq/197-iwlwifi]
+root        1390       2  0 Nov04 ?        00:00:04 [irq/198-iwlwifi]
+root        1391       2  0 Nov04 ?        00:00:03 [irq/199-iwlwifi]
+root        1392       2  0 Nov04 ?        00:00:04 [irq/200-iwlwifi]
+root        1393       2  0 Nov04 ?        00:00:03 [irq/201-iwlwifi]
+root        1394       2  0 Nov04 ?        00:00:05 [irq/202-iwlwifi]
+root        1395       2  0 Nov04 ?        00:00:03 [irq/203-iwlwifi]
+root        1396       2  0 Nov04 ?        00:00:04 [irq/204-iwlwifi]
+root        1397       2  0 Nov04 ?        00:00:03 [irq/205-iwlwifi]
+root        1398       2  0 Nov04 ?        00:00:00 [irq/206-iwlwifi]
+root        1476       2  0 Nov04 ?        00:00:00 [irq/208-VEN_048]
+root        1499       2  0 Nov04 ?        00:00:00 [nv_queue]
+root        1500       2  0 Nov04 ?        00:00:00 [nv_queue]
+root        1501       2  0 Nov04 ?        00:00:00 [nv_open_q]
+root        1503       2  0 Nov04 ?        00:03:39 [nvidia-modeset/]
+root        1504       2  0 Nov04 ?        00:00:00 [nvidia-modeset/]
+root        1505       2  0 Nov04 ?        00:01:16 [irq/209-nvidia]
+root        1506       2  0 Nov04 ?        00:00:00 [nvidia]
+root        1507       2  0 Nov04 ?        00:00:03 [nv_queue]
+root        1508       2  0 Nov04 ?        00:00:00 [UVM global queu]
+root        1509       2  0 Nov04 ?        00:00:00 [UVM deferred re]
+root        1510       2  0 Nov04 ?        00:00:00 [UVM Tools Event]
+root        1517       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-3]
+root        1518       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-2]
+root        1519       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-3]
+root        1521       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-2]
+root        1522       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-3]
+root        1523       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1524       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-2]
+root        1525       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1526       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1527       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1529       2  0 Nov04 ?        00:00:00 [xfs-buf/nvme0n1]
+root        1530       2  0 Nov04 ?        00:00:00 [xfs-conv/nvme0n]
+root        1531       2  0 Nov04 ?        00:00:00 [xfs-cil/nvme0n1]
+root        1532       2  0 Nov04 ?        00:00:00 [xfs-reclaim/nvm]
+root        1533       2  0 Nov04 ?        00:00:00 [xfs-blockgc/nvm]
+root        1534       2  0 Nov04 ?        00:00:00 [xfs-log/dm-2]
+root        1535       2  0 Nov04 ?        00:01:53 [xfsaild/dm-2]
+root        1536       2  0 Nov04 ?        00:00:00 [xfs-log/dm-3]
+root        1537       2  0 Nov04 ?        00:00:09 [xfsaild/dm-3]
+root        1538       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-8]
+root        1539       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-8]
+root        1540       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-8]
+root        1541       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1542       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1543       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-6]
+root        1544       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-6]
+root        1545       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-6]
+root        1546       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1547       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1548       2  0 Nov04 ?        00:00:00 [xfs-log/nvme0n1]
+root        1549       2  0 Nov04 ?        00:00:00 [xfsaild/nvme0n1]
+root        1550       2  0 Nov04 ?        00:00:00 [xfs-log/dm-8]
+root        1551       2  0 Nov04 ?        00:00:07 [xfsaild/dm-8]
+root        1552       2  0 Nov04 ?        00:00:00 [xfs-log/dm-6]
+root        1553       2  0 Nov04 ?        00:01:45 [xfsaild/dm-6]
+root        1561       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-7]
+root        1562       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-7]
+root        1563       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-7]
+root        1564       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1566       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1568       2  0 Nov04 ?        00:00:00 [xfs-log/dm-7]
+root        1569       2  0 Nov04 ?        00:00:00 [xfsaild/dm-7]
+root        1570       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-5]
+root        1571       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-5]
+root        1572       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-5]
+root        1573       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1574       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1575       2  0 Nov04 ?        00:00:00 [xfs-log/dm-5]
+root        1576       2  0 Nov04 ?        00:00:28 [xfsaild/dm-5]
+root        1595       2  0 Nov04 ?        00:00:00 [xfs-buf/dm-4]
+root        1596       2  0 Nov04 ?        00:00:00 [xfs-conv/dm-4]
+root        1597       2  0 Nov04 ?        00:00:00 [xfs-cil/dm-4]
+root        1599       2  0 Nov04 ?        00:00:00 [xfs-reclaim/dm-]
+root        1600       2  0 Nov04 ?        00:00:00 [xfs-blockgc/dm-]
+root        1601       2  0 Nov04 ?        00:00:00 [xfs-log/dm-4]
+root        1602       2  0 Nov04 ?        00:00:09 [xfsaild/dm-4]
+rpc         1625       1  0 Nov04 ?        00:00:01 /usr/bin/rpcbind -w -f
+root        1629       1  0 Nov04 ?        00:44:58 /sbin/auditd
+root        1631    1629  0 Nov04 ?        00:24:35 /usr/sbin/sedispatch
+root        1661       2  0 Nov04 ?        00:00:00 [audit_prune_tre]
+root        1668       1  0 Nov04 ?        00:00:03 /usr/libexec/boltd
+root        1669       1  0 Nov04 ?        00:00:48 /usr/sbin/irqbalance --foreground
+root        1670       1  1 Nov04 ?        03:03:10 /usr/bin/nvidia-powerd
+root        1671       1  0 Nov04 ?        00:00:00 /usr/sbin/mcelog --ignorenodev --daemon --foreground
+libstor+    1672       1  0 Nov04 ?        00:00:02 /usr/bin/lsmd -d
+rtkit       1673       1  0 Nov04 ?        00:00:10 /usr/libexec/rtkit-daemon
+dbus        1675       1  0 Nov04 ?        00:23:45 /usr/bin/dbus-daemon --system --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+root        1677       1  0 Nov04 ?        00:00:00 /usr/libexec/platform-python -s /usr/sbin/firewalld --nofork --nopid
+root        1679       1  0 Nov04 ?        00:00:02 /usr/sbin/sssd -i --logger=files
+root        1681       1  0 Nov04 ?        00:00:00 /usr/sbin/alsactl -s -n 19 -c -E ALSA_CONFIG_PATH=/etc/alsa/alsactl.conf --initfile=/lib/alsa/init/00main rdaemon
+root        1682       1  0 Nov04 ?        00:00:00 /usr/sbin/smartd -n -q never
+root        1683       1  0 Nov04 ?        00:01:16 /opt/Elastic/Agent/elastic-agent
+root        1685       1  0 Nov04 ?        00:00:11 /usr/libexec/udisks2/udisksd
+root        1719    1679  0 Nov04 ?        00:03:35 /usr/libexec/sssd/sssd_be --domain ds.amrdec.army.mil --uid 0 --gid 0 --logger=files
+chrony      1721       1  0 Nov04 ?        00:00:00 /usr/sbin/chronyd
+polkitd     1735       1  0 Nov04 ?        00:00:53 /usr/lib/polkit-1/polkitd --no-debug
+root        1753    1679  0 Nov04 ?        00:00:07 /usr/libexec/sssd/sssd_pam --uid 0 --gid 0 --logger=files
+root        1754    1679  0 Nov04 ?        00:03:58 /usr/libexec/sssd/sssd_nss --uid 0 --gid 0 --logger=files
+root        1755    1679  0 Nov04 ?        00:00:07 /usr/libexec/sssd/sssd_sudo --uid 0 --gid 0 --logger=files
+root        1756    1679  0 Nov04 ?        00:00:07 /usr/libexec/sssd/sssd_ssh --uid 0 --gid 0 --logger=files
+root        1757    1679  0 Nov04 ?        00:00:07 /usr/libexec/sssd/sssd_pac --uid 0 --gid 0 --logger=files
+root        1783       1  0 Nov04 ?        00:01:12 /usr/sbin/NetworkManager --no-daemon
+root        1812       1  0 Nov04 ?        00:00:02 /usr/libexec/accounts-daemon
+root        1813       1  0 Nov04 ?        00:00:16 /usr/lib/systemd/systemd-logind
+root        1870       1  0 Nov04 ?        00:00:00 /usr/sbin/oddjobd -n -p /run/oddjobd.pid -t 300
+root        1872       1  0 Nov04 ?        00:00:00 /usr/sbin/sshd -D
+root        1874       1  0 Nov04 ?        00:00:50 /opt/LansweeperAgent/LSAgent
+root        1875       1  0 Nov04 ?        00:00:00 /usr/sbin/cupsd -l
+root        1886       1  0 Nov04 ?        00:00:00 /usr/sbin/gssproxy -D
+root        1896       1  0 Nov04 ?        00:00:00 /usr/sbin/rpc.gssd
+root        1910       1  0 Nov04 ?        00:00:00 /usr/bin/rhsmcertd
+root        1917       1  0 Nov04 ?        00:00:00 /usr/sbin/gdm
+root        2084       1  0 Nov04 ?        00:00:04 /usr/sbin/wpa_supplicant -c /etc/wpa_supplicant/wpa_supplicant.conf -u -s
+root        2362       1  0 Nov04 ?        00:00:23 /usr/libexec/upowerd
+colord      2481       1  0 Nov04 ?        00:00:00 /usr/libexec/colord
+root        2486       1  0 Nov04 ?        00:08:51 /usr/sbin/pcscd --foreground --auto-exit
+root        2592       1  0 Nov04 ?        00:00:01 /usr/sbin/rsyslogd -n
+root        2661    1917  0 Nov04 ?        00:00:00 gdm-session-worker [pam/gdm-password]
+peddyco+    2680       1  0 Nov04 ?        00:00:08 /usr/lib/systemd/systemd --user
+peddyco+    2682    2680  0 Nov04 ?        00:00:00 (sd-pam)
+peddyco+    2695       1  0 Nov04 ?        00:00:01 /usr/bin/gnome-keyring-daemon --daemonize --login
+peddyco+    2730    2680  0 Nov04 ?        00:00:19 /usr/bin/dbus-daemon --session --address=systemd: --nofork --nopidfile --systemd-activation --syslog-only
+peddyco+    2733    2661  0 Nov04 tty2     00:00:00 /usr/libexec/gdm-x-session --register-session --run-script gnome-session
+peddyco+    2736    2733  0 Nov04 tty2     01:41:03 /usr/libexec/Xorg vt2 -displayfd 3 -auth /run/user/1004/gdm/Xauthority -nolisten tcp -background none -noreset -keeptty -novtswitch -verbose 3
+peddyco+    2798    2733  0 Nov04 tty2     00:00:04 /usr/libexec/gnome-session-binary
+peddyco+    2851    2680  0 Nov04 ?        00:00:00 /usr/libexec/at-spi-bus-launcher
+peddyco+    2856    2851  0 Nov04 ?        00:00:04 /usr/bin/dbus-daemon --config-file=/usr/share/defaults/at-spi2/accessibility.conf --nofork --print-address 3
+peddyco+    2859    2680  0 Nov04 ?        00:00:20 /usr/libexec/at-spi2-registryd --use-gnome-session
+peddyco+    2877    2798  1 Nov04 tty2     03:28:29 /usr/bin/gnome-shell
+root        2883       2  0 Nov04 ?        00:00:00 [nvidia-drm/time]
+peddyco+    2884    2680  0 Nov04 ?        00:00:00 /usr/libexec/gvfsd
+peddyco+    2889    2680  0 Nov04 ?        00:00:00 /usr/libexec/gvfsd-fuse /run/user/1004/gvfs -f -o big_writes
+peddyco+    2913    2877  0 Nov04 tty2     00:00:15 ibus-daemon --xim --panel disable
+peddyco+    2914    2680  0 Nov04 ?        00:00:00 /usr/libexec/xdg-permission-store
+peddyco+    2916    2680  0 Nov04 ?        00:00:00 /usr/libexec/gnome-shell-calendar-server
+peddyco+    2921    2913  0 Nov04 tty2     00:00:00 /usr/libexec/ibus-dconf
+peddyco+    2922    2913  0 Nov04 tty2     00:00:05 /usr/libexec/ibus-extension-gtk3
+peddyco+    2924       1  0 Nov04 tty2     00:00:04 /usr/libexec/ibus-x11 --kill-daemon
+peddyco+    2926    2680  0 Nov04 ?        00:00:00 /usr/libexec/ibus-portal
+peddyco+    2940    2680  0 Nov04 ?        00:00:00 /usr/libexec/dconf-service
+peddyco+    2950    2680  0 Nov04 ?        00:00:00 /usr/libexec/evolution-source-registry
+peddyco+    2962    2680  0 Nov04 ?        00:00:00 /usr/libexec/goa-daemon
+peddyco+    2974    2680  0 Nov04 ?        00:00:38 /usr/libexec/goa-identity-service
+peddyco+    2976    2680  0 Nov04 ?        00:00:13 /usr/libexec/gvfs-udisks2-volume-monitor
+peddyco+    2987    2680  0 Nov04 ?        00:00:00 /usr/libexec/gvfs-mtp-volume-monitor
+root        2989       1  0 Nov04 ?        00:00:45 /usr/libexec/sssd/sssd_kcm --uid 0 --gid 0 --logger=files
+peddyco+    2994    2680  0 Nov04 ?        00:00:00 /usr/libexec/gvfs-gphoto2-volume-monitor
+peddyco+    2999    2680  0 Nov04 ?        00:00:00 /usr/libexec/gvfs-goa-volume-monitor
+peddyco+    3004    2680  0 Nov04 ?        00:00:00 /usr/libexec/gvfs-afc-volume-monitor
+peddyco+    3011    2798  0 Nov04 tty2     00:00:09 /usr/libexec/gsd-power
+peddyco+    3012    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-print-notifications
+peddyco+    3014    2798  0 Nov04 tty2     00:00:00 /usr/libexec/gsd-rfkill
+peddyco+    3015    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-screensaver-proxy
+peddyco+    3016    2798  0 Nov04 tty2     00:00:12 /usr/libexec/gsd-sharing
+peddyco+    3017    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-sound
+peddyco+    3018    2798  0 Nov04 tty2     00:00:06 /usr/libexec/gsd-xsettings
+peddyco+    3019    2798  0 Nov04 tty2     00:00:05 /usr/libexec/gsd-wacom
+peddyco+    3020    2798  1 Nov04 tty2     02:14:43 /usr/libexec/gsd-smartcard
+peddyco+    3021    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-account
+peddyco+    3027    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-a11y-settings
+peddyco+    3028    2798  0 Nov04 tty2     00:00:05 /usr/libexec/gsd-clipboard
+peddyco+    3029    2798  0 Nov04 tty2     00:00:09 /usr/libexec/gsd-color
+peddyco+    3030    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-datetime
+peddyco+    3031    2798  0 Nov04 tty2     00:00:33 /usr/libexec/gsd-housekeeping
+peddyco+    3032    2798  0 Nov04 tty2     00:00:05 /usr/libexec/gsd-keyboard
+peddyco+    3033    2798  0 Nov04 tty2     00:00:09 /usr/libexec/gsd-media-keys
+peddyco+    3034    2798  0 Nov04 tty2     00:00:01 /usr/libexec/gsd-mouse
+peddyco+    3058       1  0 Nov04 tty2     00:00:00 /usr/libexec/gsd-printer
+root        3088       1  0 Nov04 ?        00:03:02 /usr/libexec/platform-python /usr/libexec/rhsm-service
+peddyco+    3115    2680  0 Nov04 ?        00:00:00 /usr/libexec/evolution-calendar-factory
+peddyco+    3127    2913  0 Nov04 tty2     00:00:00 /usr/libexec/ibus-engine-simple
+peddyco+    3128    2798  0 Nov04 tty2     00:00:04 /usr/libexec/platform-python -Es /usr/bin/seapplet
+peddyco+    3130    2798  0 Nov04 tty2     00:00:05 /usr/libexec/evolution/evolution-alarm-notify
+peddyco+    3134    2798  0 Nov04 tty2     00:04:15 /usr/bin/gnome-software --gapplication-service
+peddyco+    3137    2798  0 Nov04 tty2     00:00:00 /usr/libexec/gsd-disk-utility-notify
+peddyco+    3140    2798  0 Nov04 tty2     00:00:00 /usr/libexec/tracker-miner-apps
+peddyco+    3141    2798  0 Nov04 tty2     00:00:01 /usr/libexec/tracker-miner-fs
+root        3145       2  0 Nov04 ?        00:00:00 [nvidia-drm/time]
+peddyco+    3160    2680  0 Nov04 ?        00:00:02 /usr/libexec/tracker-store
+peddyco+    3170    3115  0 Nov04 ?        00:00:00 /usr/libexec/evolution-calendar-factory-subprocess --factory all --bus-name org.gnome.evolution.dataserver.Subprocess.Backend.Calendarx3115x2 --own-path /org/gnome/evolution/dataserver/Subprocess/Backend/Calendar/3115/2
+peddyco+    3229    2680  0 Nov04 ?        00:00:00 /usr/libexec/evolution-addressbook-factory
+peddyco+    3272    3229  0 Nov04 ?        00:00:00 /usr/libexec/evolution-addressbook-factory-subprocess --factory all --bus-name org.gnome.evolution.dataserver.Subprocess.Backend.AddressBookx3229x2 --own-path /org/gnome/evolution/dataserver/Subprocess/Backend/AddressBook/3229/2
+root        3766       1  0 Nov04 ?        00:00:25 /usr/libexec/fwupd/fwupd
+peddyco+    3810    2884  0 Nov04 ?        00:00:01 /usr/libexec/gvfsd-trash --spawner :1.20 /org/gtk/gvfs/exec_spaw/0
+peddyco+    4125    2680  0 Nov04 ?        00:00:20 /usr/libexec/xdg-desktop-portal
+peddyco+    4170    2680  0 Nov04 ?        00:00:00 /usr/libexec/xdg-document-portal
+root        4176    4170  0 Nov04 ?        00:00:00 fusermount -o rw,nosuid,nodev,fsname=portal,auto_unmount,subtype=portal -- /run/user/1004/doc
+peddyco+    4182    2680  0 Nov04 ?        00:00:13 /usr/libexec/xdg-desktop-portal-gtk
+peddyco+    4198    2680  0 Nov04 ?        00:00:00 /usr/bin/pipewire
+peddyco+    4201    4198  0 Nov04 ?        00:00:00 exec pipewire-media-session -d bluez5
+peddyco+    4325    2877  4 Nov04 tty2     09:59:27 /usr/lib64/firefox/firefox
+root        4400       2  0 Nov04 ?        00:00:03 [nvidia-drm/time]
+peddyco+    4406    4325  0 Nov04 tty2     00:07:02 /usr/lib64/firefox/firefox -contentproc -parentBuildID 20250430133239 -prefsLen 27628 -prefMapSize 250125 -appDir /usr/lib64/firefox/browser {b7dfc523-a778-47aa-a9d1-6e2e1d8d6560} 4325 socket
+peddyco+    4431    4325  0 Nov04 tty2     00:02:37 /usr/lib64/firefox/firefox -contentproc -childID 1 -isForBrowser -prefsLen 27769 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {8cfc133a-e0aa-4e45-8a9b-1b69ce0a416a} 4325 tab
+peddyco+    4505    4325  0 Nov04 tty2     00:01:12 /usr/lib64/firefox/firefox -contentproc -childID 2 -isForBrowser -prefsLen 33504 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {0109f3c9-24d6-459e-8f70-c43793be5476} 4325 tab
+peddyco+    4568    4325  0 Nov04 tty2     00:16:10 /usr/lib64/firefox/firefox -contentproc -parentBuildID 20250430133239 -sandboxingKind 0 -prefsLen 33504 -prefMapSize 250125 -appDir /usr/lib64/firefox/browser {ad5cb461-1a0f-46bc-9701-51ed8031b50c} 4325 utility
+peddyco+    5167    4325  0 Nov04 tty2     01:30:26 /usr/lib64/firefox/firefox -contentproc -parentBuildID 20250430133239 -prefsLen 33668 -prefMapSize 250125 -appDir /usr/lib64/firefox/browser {26b33a77-286e-4555-bd6c-04f5e09df010} 4325 rdd
+peddyco+  557726    2884  0 Nov04 ?        00:00:00 /usr/libexec/gvfsd-network --spawner :1.20 /org/gtk/gvfs/exec_spaw/1
+peddyco+  557869    2884  0 Nov04 ?        00:00:07 /usr/libexec/gvfsd-dnssd --spawner :1.20 /org/gtk/gvfs/exec_spaw/3
+root      602144       2  0 Nov04 ?        00:00:00 [nvidia-drm/time]
+peddyco+  602970       1  0 Nov04 tty2     00:00:20 /usr/lib64/speech-dispatcher-modules/sd_espeak-ng /etc/speech-dispatcher/modules/espeak-ng.conf
+peddyco+  603070       1  0 Nov04 tty2     00:00:20 /usr/lib64/speech-dispatcher-modules/sd_cicero /etc/speech-dispatcher/modules/cicero.conf
+peddyco+  603073  603070  0 Nov04 tty2     00:00:00 [sd_cicero] <defunct>
+peddyco+  603076       1  0 Nov04 tty2     00:00:20 /usr/lib64/speech-dispatcher-modules/sd_dummy /etc/speech-dispatcher/modules/dummy.conf
+peddyco+  603082       1  0 Nov04 tty2     00:00:20 /usr/lib64/speech-dispatcher-modules/sd_generic /etc/speech-dispatcher/modules/generic.conf
+peddyco+  603120       1  0 Nov04 ?        00:00:00 /usr/bin/speech-dispatcher --spawn --communication-method unix_socket --socket-path /run/user/1004/speech-dispatcher/speechd.sock
+peddyco+ 1790887    2695  0 Nov04 ?        00:00:00 /usr/bin/ssh-agent -D -a /run/user/1004/keyring/.ssh
+root     2179511       1  0 Nov04 ?        00:00:28 /usr/libexec/packagekitd
+peddyco+ 2227651    2680  0 Nov05 ?        00:00:00 /usr/libexec/gvfsd-metadata
+peddyco+ 2508893    2680  0 Nov06 ?        00:05:49 /usr/bin/pulseaudio --daemonize=no --log-target=journal
+root     2512384       1  0 Nov06 ?        00:01:29 /opt/McAfee/agent/bin/masvc self_start
+root     2512422       1  0 Nov06 ?        00:00:03 /opt/McAfee/agent/bin/macmnsvc self_start
+root     2512435       1  0 Nov06 ?        00:00:03 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512436 2512435  0 Nov06 ?        00:00:11 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512437 2512436  0 Nov06 ?        00:00:08 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512438 2512436  0 Nov06 ?        00:00:07 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512439 2512436  0 Nov06 ?        00:00:00 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512440 2512436  0 Nov06 ?        00:00:00 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512441 2512436  0 Nov06 ?        00:00:00 /opt/McAfee/agent/bin/macompatsvc self_start
+root     2512442 2512436  0 Nov06 ?        00:00:00 /opt/McAfee/agent/bin/macompatsvc self_start
+peddyco+ 3709780    2877  0 Nov10 tty2     00:05:23 /opt/google/chrome/chrome
+peddyco+ 3709785 3709780  0 Nov10 tty2     00:00:00 cat
+peddyco+ 3709786 3709780  0 Nov10 tty2     00:00:00 cat
+peddyco+ 3709788       1  0 Nov10 ?        00:00:00 /opt/google/chrome/chrome_crashpad_handler --monitor-self --monitor-self-annotation=ptype=crashpad-handler --database=/home/peddycoartte/.config/google-chrome/Crash Reports --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=lsb-release=Red Hat Enterprise Linux 8.10 (Ootpa) --annotation=plat=Linux --annotation=prod=Chrome_Linux --annotation=ver=142.0.7444.59 --initial-client-fd=5 --shared-client-connection
+peddyco+ 3709790       1  0 Nov10 ?        00:00:00 /opt/google/chrome/chrome_crashpad_handler --no-periodic-tasks --monitor-self-annotation=ptype=crashpad-handler --database=/home/peddycoartte/.config/google-chrome/Crash Reports --url=https://clients2.google.com/cr/report --annotation=channel= --annotation=lsb-release=Red Hat Enterprise Linux 8.10 (Ootpa) --annotation=plat=Linux --annotation=prod=Chrome_Linux --annotation=ver=142.0.7444.59 --initial-client-fd=4 --shared-client-connection
+peddyco+ 3709795 3709780  0 Nov10 tty2     00:00:00 /opt/google/chrome/chrome --type=zygote --no-zygote-sandbox --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable
+peddyco+ 3709796 3709780  0 Nov10 tty2     00:00:00 /opt/google/chrome/chrome-sandbox /opt/google/chrome/chrome --type=zygote --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable
+peddyco+ 3709797 3709796  0 Nov10 tty2     00:00:00 /opt/google/chrome/chrome --type=zygote --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable
+peddyco+ 3709800 3709797  0 Nov10 tty2     00:00:00 /opt/google/chrome/chrome --type=zygote --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable
+peddyco+ 3709825 3709795  0 Nov10 tty2     00:36:04 /opt/google/chrome/chrome --type=gpu-process --ozone-platform=x11 --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable --gpu-preferences=UAAAAAAAAAAgAAAEAAAAAAAAAAAAAGAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAYAAAAAAAAABgAAAAAAAAAAQAAAAAAAAAIAAAAAAAAAAgAAAAAAAAA --shared-files --metrics-shmem-handle=4,i,10560363378927389225,10996055111968162001,262144 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190708988185955192
+peddyco+ 3709830 3709780  0 Nov10 tty2     00:01:57 /opt/google/chrome/chrome --type=utility --utility-sub-type=network.mojom.NetworkService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,4884092572545555277,16417373074886808906,524288 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190708989122997041
+peddyco+ 3709832 3709800  0 Nov10 tty2     00:00:19 /opt/google/chrome/chrome --type=utility --utility-sub-type=storage.mojom.StorageService --lang=en-US --service-sandbox-type=utility --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,929298685473342156,12625470770527730416,524288 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190708990060038890
+root     3709944       2  0 Nov10 ?        00:00:00 [nvidia-drm/time]
+peddyco+ 3709948 3709825  0 Nov10 tty2     00:00:00 /opt/google/chrome/chrome --type=broker
+peddyco+ 3710829 3709800  0 Nov10 tty2     00:00:02 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3709788 --enable-crash-reporter=, --origin-trial-disabled-features=CanvasTextNg|WebAssemblyCustomDescriptors --change-stack-guard-on-fork=enable --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=26 --time-ticks-at-unix-epoch=-1762280060093487 --launch-time-ticks=519266667110 --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,2444317484553315977,16925760921846286784,2097152 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709010674959568
+peddyco+ 3710857 3709800  0 Nov10 tty2     00:00:23 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3709788 --enable-crash-reporter=, --origin-trial-disabled-features=CanvasTextNg|WebAssemblyCustomDescriptors --change-stack-guard-on-fork=enable --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=28 --time-ticks-at-unix-epoch=-1762280060093487 --launch-time-ticks=519270086058 --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,12344778806126318009,2324657262489841093,2097152 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709012549043266
+peddyco+ 3710868 3709800  0 Nov10 tty2     00:00:02 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3709788 --enable-crash-reporter=, --origin-trial-disabled-features=CanvasTextNg|WebAssemblyCustomDescriptors --change-stack-guard-on-fork=enable --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=29 --time-ticks-at-unix-epoch=-1762280060093487 --launch-time-ticks=519272728730 --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,17095384819888376536,9911772640491582135,2097152 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709013486085115
+peddyco+ 3710905 3709800  0 Nov10 tty2     00:08:49 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3709788 --enable-crash-reporter=, --origin-trial-disabled-features=CanvasTextNg|WebAssemblyCustomDescriptors --change-stack-guard-on-fork=enable --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=30 --time-ticks-at-unix-epoch=-1762280060093487 --launch-time-ticks=519274928906 --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,17778605340723576552,3872972363463966089,2097152 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709014423126964
+peddyco+ 3710962 3709780  0 Nov10 tty2     00:00:15 /opt/google/chrome/chrome --type=utility --utility-sub-type=audio.mojom.AudioService --lang=en-US --service-sandbox-type=none --crashpad-handler-pid=3709788 --enable-crash-reporter=, --change-stack-guard-on-fork=enable --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,5149923565686255165,7946376592087255482,524288 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709016297210662
+peddyco+ 3738440    2877  0 Nov10 tty2     00:02:30 /usr/bin/python3.6 /usr/bin/terminator
+root     3776912       1  0 Nov10 ?        00:00:00 /usr/sbin/crond -n
+peddyco+ 3859649 3709800  0 Nov12 tty2     00:01:08 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3709788 --enable-crash-reporter=, --origin-trial-disabled-features=CanvasTextNg|WebAssemblyCustomDescriptors --change-stack-guard-on-fork=enable --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=66 --time-ticks-at-unix-epoch=-1762280060093487 --launch-time-ticks=684692382261 --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,483677735927830934,18387809110310390910,2097152 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709048156633528
+root     3977598       2  0 02:12 ?        00:00:00 [kworker/29:0-events]
+root     4006094       2  0 10:33 ?        00:00:00 [kworker/3:0-events]
+root     4009244       2  0 11:04 ?        00:00:00 [kworker/31:2-mm_percpu_wq]
+root     4009925       2  0 11:10 ?        00:00:00 [kworker/27:2-cgroup_destroy]
+root     4009930       2  0 11:11 ?        00:00:00 [kworker/20:0-rcu_gp]
+root     4013454       2  0 11:53 ?        00:00:00 [kworker/31:1]
+root     4018494       2  0 12:01 ?        00:00:00 [kworker/30:2-events]
+root     4023030       2  0 12:39 ?        00:00:00 [kworker/u64:0-events_unbound]
+root     4026554       2  0 13:35 ?        00:00:00 [scsi_eh_0]
+root     4026555       2  0 13:35 ?        00:00:00 [scsi_tmf_0]
+root     4026556       2  0 13:35 ?        00:00:10 [usb-storage]
+root     4026561       2  0 13:35 ?        00:00:00 [scsi_eh_1]
+root     4026562       2  0 13:35 ?        00:00:00 [scsi_tmf_1]
+root     4026563       2  0 13:35 ?        00:00:00 [usb-storage]
+root     4026572       2  0 13:35 ?        00:00:00 [scsi_eh_2]
+root     4026573       2  0 13:35 ?        00:00:00 [scsi_tmf_2]
+root     4026574       2  0 13:35 ?        00:00:00 [usb-storage]
+root     4026579       2  0 13:35 ?        00:00:00 [scsi_eh_3]
+root     4026580       2  0 13:35 ?        00:00:00 [scsi_tmf_3]
+root     4026581       2  0 13:35 ?        00:00:00 [usb-storage]
+root     4026776       2  0 13:36 ?        00:00:00 [jbd2/sdd-8]
+root     4026777       2  0 13:36 ?        00:00:00 [ext4-rsv-conver]
+root     4026803       2  0 13:36 ?        00:00:00 [jbd2/sdb-8]
+root     4026804       2  0 13:36 ?        00:00:00 [ext4-rsv-conver]
+root     4026811       2  0 13:36 ?        00:00:00 [jbd2/sda1-8]
+root     4026815       2  0 13:36 ?        00:00:00 [ext4-rsv-conver]
+root     4026890       2  0 13:36 ?        00:00:00 [jbd2/sdc-8]
+root     4026891       2  0 13:36 ?        00:00:00 [ext4-rsv-conver]
+root     4027191       2  0 13:38 ?        00:00:00 [kworker/28:1-mm_percpu_wq]
+root     4028400       2  0 13:48 ?        00:00:00 [kworker/17:0-events]
+peddyco+ 4029683 3709800  0 13:57 tty2     00:00:00 /opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=3709788 --enable-crash-reporter=, --origin-trial-disabled-features=CanvasTextNg|WebAssemblyCustomDescriptors --change-stack-guard-on-fork=enable --ozone-platform=x11 --lang=en-US --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=298 --time-ticks-at-unix-epoch=-1762280060093487 --launch-time-ticks=783761152457 --shared-files=v8_context_snapshot_data:100 --metrics-shmem-handle=4,i,17210268780841109378,5901588844865944275,2097152 --field-trial-handle=3,i,1959402053774233469,623137126091054879,262144 --variations-seed-version=20251103-010038.357000 --trace-process-track-uuid=3190709265550342496
+peddyco+ 4030857 3738440  0 14:06 pts/2    00:00:00 /bin/bash
+peddyco+ 4031096 3738440  0 14:08 pts/9    00:00:00 /bin/bash
+root     4032094       2  0 14:22 ?        00:00:00 [kworker/15:0-mm_percpu_wq]
+root     4035289       2  0 15:06 ?        00:00:00 [kworker/11:1-mm_percpu_wq]
+root     4037450       2  0 15:27 ?        00:00:00 [kworker/24:2-kdmflush/253:5]
+root     4038582       2  0 15:30 ?        00:00:00 [kworker/15:1-mm_percpu_wq]
+root     4039974       2  0 15:32 ?        00:00:00 [kworker/13:2-events]
+root     4040374       2  0 15:35 ?        00:00:00 [kworker/26:1-kdmflush/253:8]
+root     4043341       2  0 16:00 ?        00:00:00 [kworker/9:2-rcu_gp]
+root     4043704       2  0 16:03 ?        00:00:00 [kworker/21:0-events]
+root     4043766       2  0 16:06 ?        00:00:00 [kworker/3:1-mm_percpu_wq]
+peddyco+ 4044759 3738440  0 16:17 pts/0    00:00:00 /bin/bash
+root     4045480       2  0 16:25 ?        00:00:00 [kworker/u64:3-events_unbound]
+root     4046138       2  0 16:31 ?        00:00:00 [kworker/7:1-events]
+root     4047319       2  0 16:37 ?        00:00:00 [kworker/13:0-mm_percpu_wq]
+root     4047456       2  0 16:39 ?        00:00:00 [kworker/5:1-events]
+root     4047531       2  0 16:41 ?        00:00:00 [kworker/6:0-cgroup_pidlist_destroy]
+root     4047544       2  0 16:41 ?        00:00:00 [kworker/25:0-events]
+root     4048258       2  0 16:51 ?        00:00:00 [kworker/28:2-events]
+root     4048804       2  0 16:52 ?        00:00:00 [kworker/26:2-events]
+root     4053185       2  0 17:03 ?        00:00:00 [kworker/u64:1-events_unbound]
+root     4053352       2  0 17:04 ?        00:00:00 [kworker/25:2-events]
+root     4053405       2  0 17:07 ?        00:00:00 [kworker/14:2-cgroup_pidlist_destroy]
+root     4053424       2  0 17:08 ?        00:00:00 [kworker/23:1-events]
+root     4054302       2  0 17:11 ?        00:00:00 [kworker/0:2-cgroup_pidlist_destroy]
+peddyco+ 4054324    4325  0 17:11 tty2     00:00:02 /usr/lib64/firefox/firefox -contentproc -childID 9761 -isForBrowser -prefsLen 31767 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {6ecd95ea-1de1-41aa-95b8-c0f247253f9c} 4325 tab
+root     4054402       2  0 17:12 ?        00:00:00 [kworker/9:0-events]
+peddyco+ 4054453    4325  5 17:12 tty2     00:02:27 /usr/lib64/firefox/firefox -contentproc -childID 9763 -isForBrowser -prefsLen 31767 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {94be4b12-b30b-4b35-97e9-4b5d66d54f5b} 4325 tab
+root     4054764       2  0 17:14 ?        00:00:00 [kworker/21:1-mm_percpu_wq]
+root     4057880       2  0 17:17 ?        00:00:00 [kworker/11:2-mm_percpu_wq]
+root     4059641       2  0 17:19 ?        00:00:00 [kworker/22:2]
+root     4061183       2  0 17:20 ?        00:00:00 [kworker/7:2]
+root     4061944       2  0 17:21 ?        00:00:00 [kworker/18:1-cgroup_destroy]
+root     4063146       2  0 17:22 ?        00:00:00 [kworker/5:0]
+peddyco+ 4066456    4325  4 17:24 tty2     00:01:34 /usr/lib64/firefox/firefox -contentproc -childID 9776 -isForBrowser -prefsLen 31769 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {43f1b87c-57a1-4291-b060-8f0f95b3ed8d} 4325 tab
+peddyco+ 4066457    4325  0 17:24 tty2     00:00:00 /usr/lib64/firefox/firefox -contentproc -childID 9777 -isForBrowser -prefsLen 31769 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {093d7a1e-671a-4dc2-aaae-e22f5ff9b55e} 4325 tab
+peddyco+ 4066459    4325  0 17:24 tty2     00:00:00 /usr/lib64/firefox/firefox -contentproc -childID 9778 -isForBrowser -prefsLen 31769 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {66b48161-b0ec-41fb-808e-cfa34d4c7cc2} 4325 tab
+root     4066560       2  0 17:25 ?        00:00:00 [kworker/23:0-events]
+root     4066850       2  0 17:29 ?        00:00:00 [kworker/20:2-mm_percpu_wq]
+root     4066853       2  0 17:29 ?        00:00:00 [kworker/17:3-mm_percpu_wq]
+root     4066993       2  0 17:30 ?        00:00:00 [kworker/1:0-events]
+root     4067038       2  0 17:30 ?        00:00:00 [kworker/12:2-mm_percpu_wq]
+root     4067039       2  0 17:30 ?        00:00:00 [kworker/24:1]
+peddyco+ 4067595    4325  0 17:33 tty2     00:00:00 /usr/lib64/firefox/firefox -contentproc -childID 9779 -isForBrowser -prefsLen 31769 -prefMapSize 250125 -jsInitLen 234912 -parentBuildID 20250430133239 -greomni /usr/lib64/firefox/omni.ja -appomni /usr/lib64/firefox/browser/omni.ja -appDir /usr/lib64/firefox/browser {e1de33fc-31ba-4f7d-aa8f-6c96d1d6a05b} 4325 tab
+root     4068112       2  0 17:36 ?        00:00:00 [kworker/19:0-mm_percpu_wq]
+root     4068113       2  0 17:36 ?        00:00:00 [kworker/16:0-cgroup_pidlist_destroy]
+root     4069474       2  0 17:38 ?        00:00:00 [kworker/30:0-mm_percpu_wq]
+root     4069644       2  0 17:38 ?        00:00:00 [kworker/10:1-mm_percpu_wq]
+root     4069743       2  0 17:40 ?        00:00:00 [kworker/18:0-mm_percpu_wq]
+root     4069753       2  0 17:40 ?        00:00:00 [kworker/27:1-xfs-sync/nvme0n1p2]
+root     4069788       2  0 17:41 ?        00:00:00 [kworker/0:1-events]
+root     4069790       2  0 17:41 ?        00:00:00 [kworker/4:0-cgroup_destroy]
+root     4069794       2  0 17:41 ?        00:00:00 [kworker/10:3-mm_percpu_wq]
+root     4069851       2  0 17:42 ?        00:00:00 [kworker/1:2-events_freezable]
+root     4069902       2  0 17:43 ?        00:00:00 [kworker/16:1-cgroup_pidlist_destroy]
+root     4069918       2  0 17:43 ?        00:00:00 [nvidia-drm/time]
+root     4070137       2  0 17:44 ?        00:00:00 [kworker/8:1-events]
+root     4070159       2  0 17:46 ?        00:00:00 [kworker/22:0-events]
+peddyco+ 4070165 3738440  0 17:46 pts/1    00:00:00 /bin/bash
+root     4070257       2  0 17:46 ?        00:00:00 [kworker/2:2-mm_percpu_wq]
+root     4070320       2  0 17:47 ?        00:00:00 [kworker/u65:1-rb_allocator]
+root     4070327       2  0 17:48 ?        00:00:00 [nvidia-drm/time]
+peddyco+ 4070472       1  0 17:49 pts/1    00:00:01 /opt/sublime_text/sublime_text --detached --fwdargv0 /usr/bin/subl test.sh
+peddyco+ 4070488       1  0 17:49 ?        00:00:00 /opt/sublime_text/crash_handler --no-rate-limit --database=/home/peddycoartte/.cache/sublime-text/Crash Reports --metrics-dir=/home/peddycoartte/.cache/sublime-text/Crash Reports --url=https://crash-server.sublimehq.com/api/upload --annotation=hash=1228047132094965066 --annotation=ident=sublime_text_4200 --initial-client-fd=15 --shared-client-connection
+peddyco+ 4070519 4070472  0 17:49 pts/1    00:00:00 /opt/sublime_text/plugin_host-3.3 4070472 /opt/sublime_text/sublime_text 14:4070488 /home/peddycoartte/.config/sublime-text /home/peddycoartte/.cache/sublime-text /opt/sublime_text/Packages
+peddyco+ 4070522 4070472  0 17:49 pts/1    00:00:00 /opt/sublime_text/plugin_host-3.8 4070472 /opt/sublime_text/sublime_text 14:4070488 false /home/peddycoartte/.config/sublime-text /home/peddycoartte/.cache/sublime-text /opt/sublime_text/Packages
+root     4070620       2  0 17:50 ?        00:00:00 [kworker/2:3-mm_percpu_wq]
+root     4070629       2  0 17:50 ?        00:00:00 [kworker/6:2-mm_percpu_wq]
+root     4070756       2  0 17:51 ?        00:00:00 [kworker/4:2-events_power_efficient]
+root     4070757       2  0 17:51 ?        00:00:00 [kworker/8:3-events]
+root     4070762       2  0 17:51 ?        00:00:00 [kworker/12:1-mm_percpu_wq]
+root     4070972       2  0 17:52 ?        00:00:00 [kworker/19:1-mm_percpu_wq]
+root     4071228       2  0 17:53 ?        00:00:00 [kworker/14:0-cgroup_pidlist_destroy]
+root     4071281       2  0 17:53 ?        00:00:00 [kworker/u65:2-rb_allocator]
+root     4071434       2  0 17:54 ?        00:00:00 [kworker/29:2-mm_percpu_wq]
+root     4071678       2  0 17:56 ?        00:00:00 [kworker/8:0-events]
+root     4071804       2  0 17:56 ?        00:00:00 [kworker/2:0-mm_percpu_wq]
+root     4072628       2  0 17:58 ?        00:00:00 [kworker/14:1-cgroup_destroy]
+peddyco+ 4072665 3738440  0 17:59 pts/12   00:00:00 /bin/bash
+root     4072723       2  0 17:59 ?        00:00:00 [kworker/u65:0-i915_flip]
+root     4072872       2  0 18:00 ?        00:00:00 [kworker/14:3-events]
+root     4072881       2  0 18:00 ?        00:00:00 [kworker/16:2-mm_percpu_wq]
+root     4072898       2  0 18:01 ?        00:00:00 [kworker/0:0]
+root     4072916       2  0 18:01 ?        00:00:00 [kworker/12:0-mm_percpu_wq]
+peddyco+ 4072932 4030857  0 18:01 pts/2    00:00:00 ps -aef

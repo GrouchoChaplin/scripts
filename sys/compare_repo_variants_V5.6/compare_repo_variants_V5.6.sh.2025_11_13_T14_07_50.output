@@ -1,0 +1,23 @@
+Unknown option: 
+compare_repo_variants_V5.6.sh — Forensic Edition
+
+Usage:
+  ../../../runAndRedirect.sh --root-folder <path> --repo-name <name> [--mode standard|forensic]
+
+Required:
+  --root-folder <path>    Root directory containing dated backup folders
+  --repo-name <name>      Repo folder prefix (e.g. jsigconversiontools)
+
+Modes:
+  --mode standard         Show simple table of repos (branch, dirty, last commit)
+  --mode forensic         Reconstruct "where you last worked" using:
+                            - last commit timestamps
+                            - latest file modification timestamps
+                            - dirty/staged/untracked counts
+                            - ASCII activity timeline
+                            - HTML forensic report
+
+Examples:
+  ../../../runAndRedirect.sh --root-folder /run/media/peddycoartte/MasterBackup/Nightly      --repo-name jsigconversiontools --mode forensic
+
+  ../../../runAndRedirect.sh --root-folder /backups --repo-name myproject --mode standard
