@@ -1,0 +1,5 @@
+\
+#!/usr/bin/env bash
+# Wrapper for full Dart Backup Toolkit launcher
+TOOL_DIR="${HOME}/.local/share/dart_backup_toolkit"
+exec "${TOOL_DIR}/scripts/dart_backup_launcher_full_v1.6.sh" "$@"
