@@ -1,0 +1,70 @@
+diff --git a/reconstruct_latest_tree_v1.1.0.sh b/reconstruct_latest_tree_v1.1.1.sh
+index abc123..def456 100755
+--- a/reconstruct_latest_tree_v1.1.0.sh
++++ b/reconstruct_latest_tree_v1.1.1.sh
+@@ -32,6 +32,7 @@ JSON_FILE=""
+ CSV_FILE=""
+ OUT_DIR=""
+ HTML_REPORT=""
++LATEST_ONLY=0           # <--- NEW OPTION
+
+ DEBUG=0
+
+@@ -75,6 +76,7 @@ Options:
+   --csv FILE         CSV export from find_latest_flutter_source_v1.9.2.sh
+   --out DIR          Output directory for reconstructed latest tree (required)
+   --html-report FILE Generate an HTML dashboard report
++  --latest-only      Only reconstruct newest version of each group (skip OLD_x)
+   --debug            Enable debug logging
+   --version          Show script version
+   -h, --help         Show this help
+@@ -125,6 +127,10 @@ while [[ $# -gt 0 ]]; do
+       HTML_REPORT="$2"
+       shift 2
+       ;;
++    --latest-only)
++      LATEST_ONLY=1
++      shift
++      ;;
+     --debug)
+       DEBUG=1
+       shift
+@@ -298,6 +304,14 @@ for key in "${!ALL_FILES[@]}"; do
+
+     role=""
+     suffix=""
++
++    # LATEST-ONLY behavior
++    if (( LATEST_ONLY == 1 )) && (( idx > 0 )); then
++      # Do not schedule a copy task for OLD instances
++      ((idx++))
++      continue
++    fi
++
+     if (( idx == 0 )); then
+       role="LATEST"
+       suffix=".LATEST"
+@@ -345,6 +359,15 @@ for key in "${!ALL_FILES[@]}"; do
+       status=""
+       row_class=""
+ 
++      # HTML TABLE: mark old instances skipped when LATEST_ONLY enabled
++      if (( LATEST_ONLY == 1 )) && (( idx > 0 )); then
++        status="SKIPPED (LATEST-ONLY)"
++        row_class="missing"
++        # Still produce table row, but continue to next instance
++        ((idx++))
++        continue
++      fi
++
+       if [[ -f "$path" ]]; then
+         # If it's the newest, mark special row class
+         if (( idx == 0 )); then
+@@ -451,6 +474,7 @@ log "  Version          : $VERSION"
+ log "  Output directory : $OUT_DIR"
+ log "  Total groups     : $TOTAL_GROUPS"
+ log "  Total instances  : $TOTAL_INSTANCES"
++log "  Latest-only mode : $LATEST_ONLY"
+ log "  Copies scheduled : $TOTAL_COPIES"
+ log "  Missing sources  : $TOTAL_MISSING"
+ log "  Total bytes      : $TOTAL_BYTES"

@@ -1,0 +1,7 @@
+Example commands:
+
+1)
+./find_latest_version_of_file.sh --root /backups --file JSIGConvert.md -N 20 -P 8
+
+2)
+./find_latest_version_of_file.sh --root /backups --file-pattern "*jsig*.md" -N 100 -P 28 --csv out.csv --json out.json
