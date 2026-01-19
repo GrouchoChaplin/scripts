@@ -1,0 +1,11 @@
+# Example exclude list for backup_projects.sh
+# Lines starting with '#' are comments.
+# These paths are interpreted relative to the source root (default: $HOME/projects).
+
+3rdParty
+IRImageryTool.KEEPJIC
+ProjectsRestored
+ir_imagery_tools_LatestWIP_REV6.RESTORED
+ir_imagery_tools.TEMP.RESTORED
+IRImageryTool
+JSIG

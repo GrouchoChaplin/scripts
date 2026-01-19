@@ -92,7 +92,7 @@ warn()  { log "WARN"  "$@"; }
 error() { log "ERROR" "$@"; }
 
 die() {
-    error "$@"
+    error "$*"
     echo -e "${RED}✖ $*${RESET}"
     exit 1
 }
@@ -124,12 +124,11 @@ Examples:
   # Create a new snapshot with progress display
   $0 --snapshot --progress
 
-  # Dry-run snapshot, show what *would* change
-  $0 --snapshot --dry-run
+  # Dry-run snapshot, show what *would* happen
+  $0 --snapshot --dry-run --verbose
 
-  # Mirror but keep certain subtrees excluded
-  $0 --mirror --exclude-dir JSIG --exclude-dir "\$HOME/projects/3rdParty"
-
+  # Doctor mode: check paths, structure, snapshots
+  $0 --doctor
 EOF
 }
 
@@ -224,63 +223,114 @@ assert_safe_paths() {
     [[ "${BACKUP_ROOT}" == "/" ]] && die "BACKUP_ROOT must not be /"
 
     [[ -d "${SRC}" ]] || die "Source directory does not exist: ${SRC}"
-    mkdir -p "${MIRROR_ROOT}" "${SNAPSHOT_ROOT}" "${LOG_DIR}"
 
-    # Ensure SRC and BACKUP_ROOT are not the same, and BACKUP_ROOT is not under SRC
-    local src_real backup_real
-    src_real="$(realpath "${SRC}")"
-    backup_real="$(realpath "${BACKUP_ROOT}")"
+    mkdir -p "${BACKUP_ROOT}" "${MIRROR_ROOT}" "${SNAPSHOT_ROOT}" "${LOG_DIR}"
 
-    if [[ "${src_real}" == "${backup_real}" ]]; then
-        die "SRC and BACKUP_ROOT must not be the same directory (${src_real})"
-    fi
-    case "${backup_real}" in
-        "${src_real}"/*)
-            die "BACKUP_ROOT (${backup_real}) must not be inside SRC (${src_real})"
+    [[ -w "${BACKUP_ROOT}" ]] || die "Backup root is not writable: ${BACKUP_ROOT}"
+
+    # Basic sanity: don't allow mirror target to be inside source
+    case "${MIRROR_ROOT}" in
+        "${SRC}"* )
+            die "Mirror root (${MIRROR_ROOT}) must not be inside source (${SRC})"
             ;;
     esac
 }
 
 check_disk_space() {
-    # Use df to check BACKUP_ROOT's filesystem usage
-    local df_out used_percent
+    # Skip disk check on doctor-only mode
+    if [[ "${MODE}" == "doctor" ]]; then
+        return
+    fi
+
+    # Use df -P for portable parseable output (POSIX format)
+    local df_out used
     df_out="$(df -P "${BACKUP_ROOT}" | awk 'NR==2 {print $5}')"
-    used_percent="${df_out%%%}"
+    used="${df_out%%%}"  # strip trailing %
 
-    info "Disk usage on backup filesystem: ${used_percent}% used (threshold ${MAX_USED_PERCENT}%)"
+    if [[ -z "${used}" ]]; then
+        warn "Could not determine disk usage; continuing cautiously."
+        return
+    fi
 
-    if (( used_percent > MAX_USED_PERCENT )); then
-        die "Backup filesystem is too full (${used_percent}% used > ${MAX_USED_PERCENT}% threshold); aborting."
+    info "Disk usage on backup filesystem: ${used}% used"
+
+    if (( used >= MAX_USED_PERCENT )); then
+        die "Filesystem is ${used}% used (>= ${MAX_USED_PERCENT}%). Aborting backup to avoid filling disk."
     fi
 }
 
 #############################
-# SNAPSHOT RETENTION
+# DOCTOR MODE
 #############################
 
-apply_retention() {
-    local snaps
-    snaps=()
+doctor_mode() {
+    echo -e "${CYAN}🔍 Doctor mode: checking backup setup...${RESET}"
+    info "Doctor mode started."
+
+    echo "Configuration:"
+    echo "  SRC          = ${SRC}"
+    echo "  BACKUP_ROOT  = ${BACKUP_ROOT}"
+    echo "  MIRROR_DEST  = ${MIRROR_DEST}"
+    echo "  SNAPSHOT_ROOT= ${SNAPSHOT_ROOT}"
+    echo "  KEEP_SNAPSHOTS = ${KEEP_SNAPSHOTS}"
+    echo "  MAX_USED_PERCENT = ${MAX_USED_PERCENT}"
+    echo "  CONFIG_FILE  = ${CONFIG_FILE}"
+    echo "  LOG_DIR      = ${LOG_DIR}"
+
+    [[ -d "${SRC}" ]] && echo -e "${GREEN}✔ Source directory exists.${RESET}" || echo -e "${RED}✖ Source directory missing: ${SRC}${RESET}"
+    [[ -d "${BACKUP_ROOT}" ]] && echo -e "${GREEN}✔ Backup root exists.${RESET}" || echo -e "${YELLOW}⚠ Backup root will be created: ${BACKUP_ROOT}${RESET}"
+    [[ -d "${SNAPSHOT_ROOT}" ]] && echo -e "${GREEN}✔ Snapshot root exists.${RESET}" || echo -e "${YELLOW}⚠ Snapshot root not yet created: ${SNAPSHOT_ROOT}${RESET}"
+
+    if [[ -L "${LATEST_LINK}" ]]; then
+        local target
+        target="$(readlink "${LATEST_LINK}")"
+        echo -e "${GREEN}✔ latest symlink exists → ${target}${RESET}"
+    else
+        echo -e "${YELLOW}⚠ latest symlink does not exist yet.${RESET}"
+    fi
+
+    check_disk_space
+
+    info "Doctor mode completed."
+    echo -e "${GREEN}Doctor check complete. See log: ${LOG_FILE}${RESET}"
+}
+
+#############################
+# SNAPSHOT HELPERS
+#############################
+
+list_snapshots_sorted() {
+    # List snapshot directories sorted lexicographically (oldest first)
     if [[ -d "${SNAPSHOT_ROOT}" ]]; then
-        while IFS= read -r snap; do
-            snaps+=("${snap}")
-        done < <(find "${SNAPSHOT_ROOT}" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' \
-                 | grep -vE '^(latest|\.incomplete-)' \
-                 | sort)
+        find "${SNAPSHOT_ROOT}" -mindepth 1 -maxdepth 1 -type d \
+            ! -name "latest" \
+            ! -name ".*" \
+            -printf '%f\n' | sort
+    fi
+}
+
+prune_snapshots() {
+    # Skip pruning in dry-run
+    if (( DRY_RUN == 1 )); then
+        info "Dry-run: skipping snapshot pruning."
+        return
     fi
 
-    local count="${#snaps[@]}"
-    if (( count <= KEEP_SNAPSHOTS )); then
-        info "Retention: ${count} snapshots present, KEEP_SNAPSHOTS=${KEEP_SNAPSHOTS}; nothing to delete."
-        return 0
+    local snapshots count_to_delete
+    mapfile -t snapshots < <(list_snapshots_sorted)
+
+    local total="${#snapshots[@]}"
+    if (( total <= KEEP_SNAPSHOTS )); then
+        info "No pruning needed: ${total} snapshots <= KEEP_SNAPSHOTS (${KEEP_SNAPSHOTS})"
+        return
     fi
 
-    local to_delete=$(( count - KEEP_SNAPSHOTS ))
-    info "Retention: ${count} snapshots present; deleting oldest ${to_delete}."
+    count_to_delete=$(( total - KEEP_SNAPSHOTS ))
+    info "Pruning ${count_to_delete} old snapshot(s); keeping newest ${KEEP_SNAPSHOTS} of ${total}."
 
     local i
-    for (( i=0; i<to_delete; i++ )); do
-        local snap="${snaps[$i]}"
+    for (( i = 0; i < count_to_delete; i++ )); do
+        local snap="${snapshots[$i]}"
         local full="${SNAPSHOT_ROOT}/${snap}"
         info "Deleting old snapshot: ${full}"
         rm -rf --one-file-system -- "${full}"
@@ -455,35 +505,11 @@ run_rsync_snapshot() {
         ln -sfn "${snap_name}" "${LATEST_LINK}"
         info "Updated latest symlink → ${snap_name}"
     else
-        info "DRY-RUN: snapshot created in temporary location only (not promoted)."
+        info "Dry-run: not promoting ${tmp_dir} to final snapshot."
     fi
 
     echo -e "${GREEN}✔ SNAPSHOT backup completed successfully.${RESET}"
     return 0
-}
-
-#############################
-# DOCTOR MODE
-#############################
-
-doctor_mode() {
-    echo -e "${CYAN}Running doctor/health checks (no rsync will be performed).${RESET}"
-
-    echo "- SRC          : ${SRC}"
-    echo "- BACKUP_ROOT  : ${BACKUP_ROOT}"
-    echo "- MIRROR_ROOT  : ${MIRROR_ROOT}"
-    echo "- SNAPSHOT_ROOT: ${SNAPSHOT_ROOT}"
-    echo "- LOG_DIR      : ${LOG_DIR}"
-    echo "- KEEP_SNAPSHOTS: ${KEEP_SNAPSHOTS}"
-    echo "- MAX_USED_PERCENT: ${MAX_USED_PERCENT}"
-    echo "- EXCLUDE_DIRS : ${EXCLUDE_DIRS[*]}"
-    echo "- EXCLUDE_FILE : ${EXCLUDE_FILE:-<none>}"
-
-    assert_safe_paths
-    check_disk_space
-
-    echo
-    echo -e "${GREEN}Doctor checks completed successfully.${RESET}"
 }
 
 #############################
@@ -514,15 +540,11 @@ main() {
         snapshot)
             run_rsync_snapshot || status=$?
             if (( status == 0 )); then
-                apply_retention || status=$?
+                prune_snapshots
             fi
             ;;
-        doctor)
-            # already handled above, but keep for completeness
-            doctor_mode
-            ;;
         *)
-            die "Unexpected MODE=${MODE}"
+            die "Unexpected MODE: ${MODE}"
             ;;
     esac
 
