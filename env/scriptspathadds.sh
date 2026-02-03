@@ -1,0 +1,34 @@
+#!/bin/bash 
+
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/backup:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/backup/dart_backup_launcher_full_v1_6_bundle:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/backup/dart_backup_toolkit_master_v1_5_full:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/backup/backup_projects:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/conda:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/env:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/git:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/git/git-branch-status-master:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/git/forensics:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/net:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/search:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/search/OLD:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/search/dart_backup_reconciliation_toolkit:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/search/find_latest_file_tool_v1.1:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys/ownership_tools:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys/execwrap-4.0:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys/subl:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys/compare_repo_variants_V5.6:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys/compare_repo_variants_V5.6_Patch3:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/sys/compare_repo_variants_V5.6_Patch4:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/test:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/tools:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/tools/scripts:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/presets:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/artifacts:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/logs:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/bash:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/bash/5.3:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/rpm:$PATH
+export PATH=/home/peddycoartte/projects/peddycoartte/scripts/ui:$PATH

@@ -95,3 +95,6 @@ export PATH="${SCRIPTS_HOME}/test":$PATH
 export PROMPT_COMMAND='if [ "$(id -u)" -ne 0 ]; then 
     echo "$(date "+%Y-%m-%d.%H:%M:%S") $(pwd) $(history 1)" >> ~/.logs/BASH/bash-history-$(date "+%Y-%m-%d").log; 
 fi'
+
+
+alias subl-clean='SUBLIME_SESSION_NAME=__clean__ subl --new-window'
