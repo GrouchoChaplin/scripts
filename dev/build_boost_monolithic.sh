@@ -1,379 +1,169 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ================== Defaults ==================
-REMOTE=""
-TAG=""
-EXPECTED_COMMIT=""
-PREFIX=""
-JOBS=6
-CXXSTD=17
-BUILD_LOCALE=1
-WORKDIR="$(pwd)/_boost_build"
-DRY_RUN=0
+########################################
+# Defaults
+########################################
 
-# Naming
-DEFAULT_LIB_BASENAME="libBoostMono"
-MONO_NAME=""   # if empty -> auto canonical: libBoostMono-<boost>-<compiler>-cxx<std>.a
-# ==============================================
+SOURCE=""
+TARBALL_URL=""
+TARBALL_SHA256=""
+PREFIX="$(pwd)/myboost"
+JOBS="$(nproc)"
+LIBNAME="BoostMono"
+
+########################################
+# Helpers
+########################################
+
+die() {
+  echo "ERROR: $*" >&2
+  exit 1
+}
 
 usage() {
-cat <<EOF
+  cat <<EOF
 Usage:
-  $0 --remote <git-url> --tag <ref> [options]
+  build_boost_monolithic.sh \\
+    --source tarball \\
+    --tarball-url <url> \\
+    --tarball-sha256 <sha256> \\
+    [--prefix <dir>] \\
+    [--jobs <n>] \\
+    [--libname <name>]
 
 Required:
-  --remote <url>          Boost git repository URL
-  --tag <ref>             Branch or tag to build (any git ref accepted)
+  --source tarball
+  --tarball-url
+  --tarball-sha256
 
-Options:
-  --expect-commit <sha>   Require exact commit SHA
-  --prefix <dir>          Install prefix (default: WORKDIR/myboost)
-  --jobs <n>              Parallel jobs (default: 6)
-  --cxxstd <nn>           C++ standard (default: 17)
-  --no-locale             Disable boost_locale
-  --libname <name>        Override output archive name (.a)
-  --workdir <dir>         Working directory (default: ./_boost_build)
-  --dry-run               Print plan only; do not clone/build/write
-  -h, --help              Show this help
-
-Examples:
-  $0 --remote https://github.com/boostorg/boost.git --tag boost-1.79.0
-  $0 --remote /mnt/mirrors/boost.git --tag boost-1.79.0 --expect-commit <sha>
-  $0 --remote https://github.com/boostorg/boost.git --tag boost-1.79.0 --dry-run
+Optional:
+  --prefix   Install prefix (default: ./myboost)
+  --jobs     Parallel jobs (default: nproc)
+  --libname  Output archive base name (default: BoostMono)
 EOF
 }
 
-log() { printf "==> %s\n" "$*" >&2; }
-die() { printf "ERROR: %s\n" "$*" >&2; exit 1; }
+########################################
+# Argument parsing
+########################################
 
-require() { command -v "$1" >/dev/null 2>&1 || die "Missing command: $1"; }
-
-abspath() {
-  python3 - <<'PY' "$1"
-import os,sys
-print(os.path.abspath(sys.argv[1]))
-PY
-}
-
-# ================= Arg parsing =================
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --remote) REMOTE="$2"; shift 2 ;;
-    --tag) TAG="$2"; shift 2 ;;
-    --expect-commit) EXPECTED_COMMIT="$2"; shift 2 ;;
+    --source) SOURCE="$2"; shift 2 ;;
+    --tarball-url) TARBALL_URL="$2"; shift 2 ;;
+    --tarball-sha256) TARBALL_SHA256="$2"; shift 2 ;;
     --prefix) PREFIX="$2"; shift 2 ;;
     --jobs) JOBS="$2"; shift 2 ;;
-    --cxxstd) CXXSTD="$2"; shift 2 ;;
-    --no-locale) BUILD_LOCALE=0; shift ;;
-    --libname) MONO_NAME="$2"; shift 2 ;;
-    --workdir) WORKDIR="$2"; shift 2 ;;
-    --dry-run) DRY_RUN=1; shift ;;
+    --libname) LIBNAME="$2"; shift 2 ;;
     -h|--help) usage; exit 0 ;;
-    *) die "Unknown option: $1" ;;
+    *) die "Unknown argument: $1" ;;
   esac
 done
 
-[[ -n "$REMOTE" ]] || die "--remote required"
-[[ -n "$TAG" ]] || die "--tag required"
+########################################
+# Validation
+########################################
 
-PREFIX="${PREFIX:-$WORKDIR/myboost}"
-PREFIX="$(abspath "$PREFIX")"
-WORKDIR="$(abspath "$WORKDIR")"
+[[ "$SOURCE" == "tarball" ]] || die "--source tarball is required"
+[[ -n "$TARBALL_URL" ]] || die "--tarball-url is required"
+[[ -n "$TARBALL_SHA256" ]] || die "--tarball-sha256 is required"
 
-# ================= Preflight tools =================
-require git
-require g++
-require ar
-require ranlib
-require nm
-require sha256sum
-require awk
-require sed
-require tr
-require head
+########################################
+# Setup
+########################################
 
-# ================= Helpers =================
-verify_remote_and_ref() {
-  log "Preflight: verifying remote and ref"
-  git ls-remote --exit-code "$REMOTE" >/dev/null 2>&1 \
-    || die "Remote not reachable: $REMOTE"
-
-  git ls-remote --exit-code "$REMOTE" \
-    "refs/tags/$TAG" "refs/heads/$TAG" >/dev/null 2>&1 \
-    || die "Ref '$TAG' not found in $REMOTE"
-}
-
-resolve_commit_for_ref() {
-  # Prefer heads/tags explicit refs; pick the first match deterministically.
-  local sha
-  sha="$(git ls-remote "$REMOTE" "refs/tags/$TAG" "refs/heads/$TAG" \
-        | head -n 1 | awk '{print $1}')"
-  [[ -n "$sha" ]] || die "Failed to resolve commit for ref '$TAG'"
-  echo "$sha"
-}
-
-detect_compiler_tag() {
-  # Honor $CXX if set, else g++
-  local cxx="${CXX:-g++}"
-  local line lower
-  line="$("$cxx" --version | head -n 1 || true)"
-  lower="$(printf '%s' "$line" | tr '[:upper:]' '[:lower:]')"
-
-  if [[ "$lower" =~ gcc ]]; then
-    local maj
-    maj="$("$cxx" -dumpversion | cut -d. -f1)"
-    echo "gcc${maj}"
-  elif [[ "$lower" =~ clang ]]; then
-    local maj
-    maj="$("$cxx" --version | sed -n 's/.*clang version \([0-9]\+\).*/\1/p')"
-    echo "clang${maj:-unknown}"
-  else
-    echo "cxxunknown"
-  fi
-}
-
-infer_boost_version_from_ref() {
-  # boost-1.79.0 -> 1.79.0
-  if [[ "$1" =~ boost-([0-9]+\.[0-9]+(\.[0-9]+)?) ]]; then
-    echo "${BASH_REMATCH[1]}"
-  else
-    echo "unknown"
-  fi
-}
-
-# NOTE:
-# In Boost git repos, boost/version.hpp is generated by bootstrap.sh.
-# The authoritative header always lives in libs/headers/include/boost/.
-#
-read_boost_version_from_tree() {
-  local root="$1"
-  local hdr="$root/libs/headers/include/boost/version.hpp"
-
-  [[ -f "$hdr" ]] || die "Missing Boost headers: $hdr"
-
-  local v
-  v="$(grep -E '^[[:space:]]*#define[[:space:]]+BOOST_LIB_VERSION' "$hdr" \
-      | awk '{print $3}' | tr -d '"' | sed 's/_/./' || true)"
-
-  [[ -n "$v" ]] || die "Could not read BOOST_LIB_VERSION from $hdr"
-  echo "$v"
-}
-
-validate_libname() {
-  local name="$1"
-  [[ "$name" =~ ^lib[[:alnum:]_.+-]+\.a$ ]] \
-    || die "--libname invalid: '$name' (must look like libSomething.a; only alnum/_.+- allowed)"
-}
-
-# ================= Plan computation =================
-verify_remote_and_ref
-
-REF_COMMIT="$(resolve_commit_for_ref)"
-if [[ -n "$EXPECTED_COMMIT" && "$EXPECTED_COMMIT" != "$REF_COMMIT" ]]; then
-  die "Commit mismatch for ref '$TAG'
-Expected: $EXPECTED_COMMIT
-Actual:   $REF_COMMIT"
-fi
-
-COMPILER_TAG="$(detect_compiler_tag)"
-STD_TAG="cxx${CXXSTD}"
-
-# In dry-run, do NOT clone. Infer version from ref string if possible.
-if [[ "$DRY_RUN" -eq 1 ]]; then
-  BOOST_VERSION="$(infer_boost_version_from_ref "$TAG")"
-else
-  # For real build planning, we'll read authoritative version from the checked-out tree
-  BOOST_VERSION="(will-determine-from-source)"
-fi
-
-# Canonical naming (SONAME-style for static archive)
-if [[ "$BOOST_VERSION" == "(will-determine-from-source)" ]]; then
-  # placeholder for plan; final name computed later once version is known
-  CANONICAL_NAME="${DEFAULT_LIB_BASENAME}-<boostver>-${COMPILER_TAG}-${STD_TAG}.a"
-else
-  CANONICAL_NAME="${DEFAULT_LIB_BASENAME}-${BOOST_VERSION}-${COMPILER_TAG}-${STD_TAG}.a"
-fi
-
-if [[ -z "$MONO_NAME" ]]; then
-  MONO_NAME="$CANONICAL_NAME"
-fi
-
-# If user overrode libname, validate now (even in dry-run)
-if [[ "$MONO_NAME" != "$CANONICAL_NAME" ]]; then
-  validate_libname "$MONO_NAME"
-fi
-
-ABI_ID="boost=${BOOST_VERSION};compiler=${COMPILER_TAG};cxxstd=${CXXSTD};locale=${BUILD_LOCALE}"
-
-# ================= Dry-run =================
-if [[ "$DRY_RUN" -eq 1 ]]; then
-  log "DRY RUN MODE — no build will occur"
-  cat <<EOF
-
-Resolved configuration:
-  Remote:        $REMOTE
-  Ref:           $TAG
-  Commit:        $REF_COMMIT
-  Boost version: $BOOST_VERSION (inferred from ref)
-  Compiler:      $COMPILER_TAG
-  C++ standard:  c++$CXXSTD
-  Locale:        $BUILD_LOCALE
-  Jobs:          $JOBS
-
-Outputs:
-  Prefix:        $PREFIX
-  Archive:       $PREFIX/lib/$MONO_NAME
-  ABI identity:  $ABI_ID
-
-Actions skipped:
-  - git clone
-  - git submodule update --init --recursive
-  - bootstrap
-  - b2 build
-  - archive merge
-  - manifest writes
-
-EOF
-  exit 0
-fi
-
-# ================= Real build =================
-log "Starting real build"
-log "Workdir: $WORKDIR"
-log "Prefix:  $PREFIX"
-
-rm -rf "$WORKDIR"
+WORKDIR="$(pwd)/_boost_build"
 mkdir -p "$WORKDIR"
+cd "$WORKDIR"
 
-log "Cloning Boost (full source requires submodules)"
-git clone --branch "$TAG" "$REMOTE" "$WORKDIR/boost-src"
-cd "$WORKDIR/boost-src"
+echo "==> Workdir: $WORKDIR"
+echo "==> Prefix:  $PREFIX"
+echo "==> Jobs:    $JOBS"
 
-# Confirm commit matches ref resolution (and optional expected_commit)
-ACTUAL_COMMIT="$(git rev-parse HEAD)"
-if [[ "$ACTUAL_COMMIT" != "$REF_COMMIT" ]]; then
-  die "Unexpected: cloned HEAD does not match ls-remote resolution
-ls-remote: $REF_COMMIT
-cloned:    $ACTUAL_COMMIT"
-fi
-if [[ -n "$EXPECTED_COMMIT" && "$ACTUAL_COMMIT" != "$EXPECTED_COMMIT" ]]; then
-  die "Commit mismatch after clone
-Expected: $EXPECTED_COMMIT
-Actual:   $ACTUAL_COMMIT"
-fi
+########################################
+# Download tarball
+########################################
 
-log "Initializing submodules (required for Boost build + headers)"
-git submodule update --init --recursive
+echo "==> Downloading Boost tarball"
+curl -L --fail -o boost.tar.gz "$TARBALL_URL"
 
-# Determine authoritative boost version now that headers exist
-BOOST_VERSION="$(read_boost_version_from_tree "$WORKDIR/boost-src")"
-ABI_ID="boost=${BOOST_VERSION};compiler=${COMPILER_TAG};cxxstd=${CXXSTD};locale=${BUILD_LOCALE}"
+########################################
+# Verify SHA-256
+########################################
 
-CANONICAL_NAME="${DEFAULT_LIB_BASENAME}-${BOOST_VERSION}-${COMPILER_TAG}-${STD_TAG}.a"
+echo "==> Verifying SHA-256"
+echo "$TARBALL_SHA256  boost.tar.gz" | sha256sum -c -
 
-# If user did NOT override, adopt canonical name now.
-if [[ -z "${1:-}" ]]; then :; fi
-if [[ "$MONO_NAME" == "${DEFAULT_LIB_BASENAME}-<boostver>-${COMPILER_TAG}-${STD_TAG}.a" ]]; then
-  MONO_NAME="$CANONICAL_NAME"
-fi
+########################################
+# Extract tarball
+########################################
 
-# Validate final library name
-validate_libname "$MONO_NAME"
+echo "==> Extracting tarball"
+tar -xzf boost.tar.gz
 
-log "Bootstrapping Boost.Build"
-./bootstrap.sh >/dev/null
+BOOST_SRC_DIR="$(tar -tzf boost.tar.gz | head -1 | cut -d/ -f1)"
 
-WITH_LOCALE=()
-[[ "$BUILD_LOCALE" -eq 1 ]] && WITH_LOCALE+=(--with-locale)
+[[ -d "$BOOST_SRC_DIR" ]] || die "Failed to locate extracted Boost directory"
 
-log "Building Boost static libs"
+BOOST_SRC_DIR="$WORKDIR/$BOOST_SRC_DIR"
+echo "==> Boost source dir: $BOOST_SRC_DIR"
+
+########################################
+# Bootstrap Boost.Build
+########################################
+
+cd "$BOOST_SRC_DIR"
+
+echo "==> Bootstrapping Boost.Build"
+./bootstrap.sh
+
+########################################
+# Build static Boost libraries
+########################################
+
+echo "==> Building static Boost libraries"
 ./b2 \
   -j"$JOBS" \
-  link=static runtime-link=static threading=multi variant=release \
-  cxxflags="-std=c++$CXXSTD -fPIC" \
-  --with-system --with-filesystem --with-thread --with-chrono \
-  --with-regex --with-date_time --with-atomic --with-serialization \
-  --with-program_options --with-iostreams --with-random \
-  --with-timer --with-wave --with-context --with-coroutine --with-fiber \
-  "${WITH_LOCALE[@]}" \
-  stage
+  link=static \
+  runtime-link=static \
+  threading=multi \
+  variant=release \
+  cxxflags="-fPIC" \
+  --prefix="$PREFIX" \
+  install
 
-log "Installing headers and libs"
-mkdir -p "$PREFIX/include" "$PREFIX/lib" "$PREFIX/manifest"
-rm -rf "$PREFIX/include/boost"
-cp -r boost "$PREFIX/include/"
+########################################
+# Merge all static libs
+########################################
 
-rm -f "$PREFIX/lib/libboost_"*.a 2>/dev/null || true
-cp stage/lib/libboost_*.a "$PREFIX/lib/"
+echo "==> Merging static libraries"
 
-log "Creating monolithic archive: $PREFIX/lib/$MONO_NAME"
-(
-  cd "$PREFIX/lib"
-  ar -M <<EOF
-CREATE $MONO_NAME
-ADDLIB libboost_*.a
+LIBDIR="$PREFIX/lib"
+OUTLIB="$LIBDIR/lib${LIBNAME}.a"
+
+mkdir -p "$LIBDIR"
+rm -f "$OUTLIB"
+
+ARFILES=$(find "$LIBDIR" -name "libboost_*.a")
+
+[[ -n "$ARFILES" ]] || die "No Boost static libraries found to merge"
+
+ar -M <<EOF
+CREATE $OUTLIB
+$(for f in $ARFILES; do echo "ADDLIB $f"; done)
 SAVE
 END
 EOF
-  ranlib "$MONO_NAME"
-)
 
-# Convenience symlinks
-(
-  cd "$PREFIX/lib"
-  ln -sf "$MONO_NAME" "${DEFAULT_LIB_BASENAME}-${BOOST_VERSION}.a"
-  ln -sf "$MONO_NAME" "${DEFAULT_LIB_BASENAME}.a"
-)
+echo "==> Created monolithic archive:"
+echo "    $OUTLIB"
 
-# ================= Manifests =================
-TEXT_MANIFEST="$PREFIX/manifest/BoostMono-manifest.txt"
-JSON_MANIFEST="$PREFIX/manifest/BoostMono-manifest.json"
+########################################
+# Sanity check
+########################################
 
-ARCHIVE_SHA="$(sha256sum "$PREFIX/lib/$MONO_NAME" | awk '{print $1}')"
+echo "==> Verifying archive contents"
+ar t "$OUTLIB" | head -n 10
 
-cat > "$TEXT_MANIFEST" <<EOF
-timestamp_utc: $(date -u +%FT%TZ)
-remote: $REMOTE
-ref: $TAG
-commit: $ACTUAL_COMMIT
-boost_version: $BOOST_VERSION
-compiler_tag: $COMPILER_TAG
-cxxstd: c++$CXXSTD
-locale_enabled: $BUILD_LOCALE
-archive_name: $MONO_NAME
-archive_path: $PREFIX/lib/$MONO_NAME
-archive_sha256: $ARCHIVE_SHA
-abi_identity: $ABI_ID
-symlinks:
-  ${DEFAULT_LIB_BASENAME}-${BOOST_VERSION}.a -> $MONO_NAME
-  ${DEFAULT_LIB_BASENAME}.a -> $MONO_NAME
-EOF
-
-cat > "$JSON_MANIFEST" <<EOF
-{
-  "timestamp_utc": "$(date -u +%FT%TZ)",
-  "remote": "$REMOTE",
-  "ref": "$TAG",
-  "commit": "$ACTUAL_COMMIT",
-  "boost_version": "$BOOST_VERSION",
-  "compiler_tag": "$COMPILER_TAG",
-  "cxx_standard": "c++$CXXSTD",
-  "locale_enabled": $BUILD_LOCALE,
-  "archive_name": "$MONO_NAME",
-  "archive_path": "$PREFIX/lib/$MONO_NAME",
-  "archive_sha256": "$ARCHIVE_SHA",
-  "abi_identity": "$ABI_ID",
-  "symlinks": {
-    "${DEFAULT_LIB_BASENAME}-${BOOST_VERSION}.a": "$MONO_NAME",
-    "${DEFAULT_LIB_BASENAME}.a": "$MONO_NAME"
-  }
-}
-EOF
-
-log "DONE"
-log "Headers:  $PREFIX/include/boost"
-log "Library:  $PREFIX/lib/$MONO_NAME"
-log "Symlink:  $PREFIX/lib/${DEFAULT_LIB_BASENAME}.a"
-log "Manifest: $TEXT_MANIFEST"
-log "JSON:     $JSON_MANIFEST"
+echo "==> SUCCESS"
