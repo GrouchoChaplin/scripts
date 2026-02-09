@@ -16,8 +16,6 @@ DRY_RUN=0
 DEFAULT_LIB_BASENAME="libBoostMono"
 MONO_NAME=""
 
-ENFORCE_ONE_ABI_PER_PREFIX=1
-FORCE_ABI=0
 # ==============================================
 
 usage() {
@@ -34,11 +32,9 @@ Options:
   --prefix <dir>          Install prefix
   --jobs <n>              Parallel jobs (default: 6)
   --cxxstd <nn>           C++ standard (default: 17)
-  --no-locale              Disable boost_locale
+  --no-locale             Disable boost_locale
   --libname <name>        Override output archive name
   --workdir <dir>         Build working directory
-  --force-abi             Override ABI lock
-  --no-abi-lock           Disable ABI lock enforcement
   --dry-run               Print actions only; do not build
   -h, --help              Show this help
 EOF
@@ -46,6 +42,10 @@ EOF
 
 log() { printf "==> %s\n" "$*" >&2; }
 die() { printf "ERROR: %s\n" "$*" >&2; exit 1; }
+
+require() {
+  command -v "$1" >/dev/null 2>&1 || die "Missing command: $1"
+}
 
 # ================= Arg parsing =================
 while [[ $# -gt 0 ]]; do
@@ -59,8 +59,6 @@ while [[ $# -gt 0 ]]; do
     --no-locale) BUILD_LOCALE=0; shift ;;
     --libname) MONO_NAME="$2"; shift 2 ;;
     --workdir) WORKDIR="$2"; shift 2 ;;
-    --force-abi) FORCE_ABI=1; shift ;;
-    --no-abi-lock) ENFORCE_ONE_ABI_PER_PREFIX=0; shift ;;
     --dry-run) DRY_RUN=1; shift ;;
     -h|--help) usage; exit 0 ;;
     *) die "Unknown option: $1" ;;
@@ -73,7 +71,6 @@ done
 PREFIX="${PREFIX:-$WORKDIR/myboost}"
 
 # ================= Preflight =================
-require() { command -v "$1" >/dev/null 2>&1 || die "Missing command: $1"; }
 require git
 require g++
 require ar
@@ -90,36 +87,76 @@ verify_remote_and_ref() {
     || die "Ref '$TAG' not found in $REMOTE"
 }
 
+# detect_compiler_tag() {
+#   local v
+#   v="$(g++ --version | head -n1)"
+#   if [[ "$v" =~ gcc ]]; then
+#     echo "gcc$(g++ -dumpversion | cut -d. -f1)"
+#   elif [[ "$v" =~ clang ]]; then
+#     echo "clang$(g++ --version | sed -n 's/.*clang version \([0-9]\+\).*/\1/p')"
+#   else
+#     echo "cxxunknown"
+#   fi
+# }
+
 detect_compiler_tag() {
-  local v
-  v="$(g++ --version | head -n1)"
-  if [[ "$v" =~ gcc ]]; then
-    echo "gcc$(g++ -dumpversion | cut -d. -f1)"
-  elif [[ "$v" =~ clang ]]; then
-    echo "clang$(g++ --version | sed -n 's/.*clang version \([0-9]\+\).*/\1/p')"
+  local cxx="${CXX:-g++}"
+  local line
+
+  line="$("$cxx" --version | head -n 1 || true)"
+
+  # Normalize to lowercase for matching
+  local lower
+  lower="$(printf '%s' "$line" | tr '[:upper:]' '[:lower:]')"
+
+  if [[ "$lower" =~ gcc ]]; then
+    # gcc/g++ major version
+    local maj
+    maj="$("$cxx" -dumpversion | cut -d. -f1)"
+    echo "gcc${maj}"
+  elif [[ "$lower" =~ clang ]]; then
+    # clang++ major version
+    local maj
+    maj="$("$cxx" --version | sed -n 's/.*clang version \([0-9]\+\).*/\1/p')"
+    echo "clang${maj:-unknown}"
   else
     echo "cxxunknown"
   fi
 }
 
+
+infer_boost_version_from_ref() {
+  if [[ "$1" =~ boost-([0-9]+\.[0-9]+(\.[0-9]+)?) ]]; then
+    echo "${BASH_REMATCH[1]}"
+  else
+    echo "unknown"
+  fi
+}
+
 verify_remote_and_ref
 
-# ================= Metadata resolve =================
-TMP_DIR="$(mktemp -d)"
-trap 'rm -rf "$TMP_DIR"' EXIT
+# ================= Resolve commit (no clone) =================
+GIT_COMMIT="$(git ls-remote "$REMOTE" "refs/tags/$TAG" "refs/heads/$TAG" \
+  | head -n1 | awk '{print $1}')"
 
-git clone --depth 1 --branch "$TAG" "$REMOTE" "$TMP_DIR/src" >/dev/null 2>&1
-cd "$TMP_DIR/src"
+[[ -n "$GIT_COMMIT" ]] || die "Failed to resolve commit for ref $TAG"
 
-GIT_COMMIT="$(git rev-parse HEAD)"
-[[ -z "$EXPECTED_COMMIT" || "$EXPECTED_COMMIT" == "$GIT_COMMIT" ]] \
-  || die "Commit mismatch: expected $EXPECTED_COMMIT, got $GIT_COMMIT"
-
-BOOST_VERSION="$(grep -E '^#define BOOST_LIB_VERSION' boost/version.hpp \
-  | awk '{print $3}' | tr -d '"' | sed 's/_/./')"
+if [[ -n "$EXPECTED_COMMIT" && "$EXPECTED_COMMIT" != "$GIT_COMMIT" ]]; then
+  die "Commit mismatch: expected $EXPECTED_COMMIT, got $GIT_COMMIT"
+fi
 
 COMPILER_TAG="$(detect_compiler_tag)"
 STD_TAG="cxx${CXXSTD}"
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  BOOST_VERSION="$(infer_boost_version_from_ref "$TAG")"
+else
+  TMP_DIR="$(mktemp -d)"
+  trap 'rm -rf "$TMP_DIR"' EXIT
+  git clone --depth 1 --branch "$TAG" "$REMOTE" "$TMP_DIR/src" >/dev/null
+  BOOST_VERSION="$(grep -E '^#define BOOST_LIB_VERSION' "$TMP_DIR/src/boost/version.hpp" \
+    | awk '{print $3}' | tr -d '"' | sed 's/_/./')"
+fi
 
 CANONICAL_NAME="${DEFAULT_LIB_BASENAME}-${BOOST_VERSION}-${COMPILER_TAG}-${STD_TAG}.a"
 [[ -z "$MONO_NAME" ]] && MONO_NAME="$CANONICAL_NAME"
@@ -135,7 +172,7 @@ Resolved configuration:
   Remote:        $REMOTE
   Ref:           $TAG
   Commit:        $GIT_COMMIT
-  Boost version: $BOOST_VERSION
+  Boost version: $BOOST_VERSION (inferred)
   Compiler:      $COMPILER_TAG
   C++ standard:  c++$CXXSTD
   Locale:        $BUILD_LOCALE
@@ -147,7 +184,7 @@ Outputs:
   ABI identity:  $ABI_ID
 
 Actions skipped:
-  - git clone (real)
+  - git clone
   - bootstrap
   - b2 build
   - archive merge
