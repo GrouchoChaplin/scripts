@@ -1,3 +1,4 @@
+
 #!/usr/bin/env bash
 # ---------------------------------------------------------------------------
 # git_search_file_branches.sh
@@ -131,7 +132,7 @@ if [[ ! -s "$TMPFILE" ]]; then
 fi
 
 # --- Sort newest → oldest ---
-SORTED=$(sort -r -t'|' -k4,4 "$TMPFILE")
+SORTED=$(sort -r -t'|' -k3,3 "$TMPFILE")
 
 # --- Limit results ---
 if (( LIMIT > 0 )); then
