@@ -103,7 +103,6 @@ echo "==> Extracting tarball"
 tar -xzf boost.tar.gz
 
 BOOST_SRC_DIR="$(tar -tzf boost.tar.gz | head -1 | cut -d/ -f1)"
-
 [[ -d "$BOOST_SRC_DIR" ]] || die "Failed to locate extracted Boost directory"
 
 BOOST_SRC_DIR="$WORKDIR/$BOOST_SRC_DIR"
@@ -119,10 +118,17 @@ echo "==> Bootstrapping Boost.Build"
 ./bootstrap.sh
 
 ########################################
-# Build static Boost libraries
+# Stage Boost headers (REQUIRED)
 ########################################
 
-echo "==> Building static Boost libraries"
+echo "==> Staging Boost headers"
+./b2 headers
+
+########################################
+# Build and install static Boost libraries
+########################################
+
+echo "==> Building and installing static Boost libraries"
 ./b2 \
   -j"$JOBS" \
   link=static \
@@ -146,7 +152,6 @@ mkdir -p "$LIBDIR"
 rm -f "$OUTLIB"
 
 ARFILES=$(find "$LIBDIR" -name "libboost_*.a")
-
 [[ -n "$ARFILES" ]] || die "No Boost static libraries found to merge"
 
 ar -M <<EOF
