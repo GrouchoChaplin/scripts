@@ -5,9 +5,10 @@
 
 set -euo pipefail
 
-SOURCE="/home/"
+SOURCE="/home/peddycoartte"
 DEST="/run/media/peddycoartte/Development/Backups/"
-LOG="/var/log/backup-home.log"
+LOG="/home/peddycoartte/.logs/BACKUPS/backup-home.log"
+
 MAX_LOG_SIZE_MB=10
 
 # ── Log rotation ─────────────────────────────────────────────────────────────
@@ -105,3 +106,5 @@ fi
 # [2026-03-20 02:00:01] [INFO] Destination mount point: /mnt/backup
 # [2026-03-20 02:03:47] [INFO] Backup completed successfully in 00h 03m 46s
 # [2026-03-20 02:03:47] [INFO] ======================================================
+
+
